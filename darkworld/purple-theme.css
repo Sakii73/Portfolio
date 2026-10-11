@@ -1,0 +1,107 @@
+/* =========================================================
+   purple-theme.css — the purple / magenta Dark World look
+   ---------------------------------------------------------
+   The page's blues come from CSS variables, so changing the
+   variables recolors the nav bar, borders and shadows at once.
+   !important is needed because the site's main CSS uses a
+   high-priority selector trick for these.
+   ========================================================= */
+
+/* 1. The site's color variables: blue -> purple */
+html {
+    --color-nav-blue: #2d0b55 !important;         /* nav bar      (was #342DB5) */
+    --color-deltarune-blue: #b44dff !important;   /* borders      (was #0000FF) */
+    --color-deltarune-shadow: #2a0845 !important; /* text shadow  (was #0F0F70) */
+}
+
+/* 2. Page background: black + TWO grids of squares crossing each other
+      - purple 48px squares drifting toward the TOP-LEFT
+      - pink-magenta 72px squares drifting toward the BOTTOM-RIGHT
+      Each grid = 2 gradients (horizontal lines + vertical lines). */
+html body {
+    background-color: #07000f !important;
+    background-image:
+        linear-gradient(rgba(180, 77, 255, 0.12) 2px, transparent 2px),          /* purple: horizontal lines */
+        linear-gradient(90deg, rgba(180, 77, 255, 0.12) 2px, transparent 2px),   /* purple: vertical lines */
+        linear-gradient(rgba(255, 90, 210, 0.08) 2px, transparent 2px),          /* pink: horizontal lines */
+        linear-gradient(90deg, rgba(255, 90, 210, 0.08) 2px, transparent 2px);   /* pink: vertical lines */
+    background-size: 48px 48px, 48px 48px, 72px 72px, 72px 72px;
+    animation: dw-grid-scroll 3s linear infinite;   /* lower = faster */
+}
+
+/* Each grid moves exactly one square per loop, so the loop is seamless.
+   Negative = up/left, positive = down/right. */
+@keyframes dw-grid-scroll {
+    from { background-position: 0 0, 0 0, 0 0, 0 0; }
+    to   { background-position: -48px -48px, -48px -48px, 72px 72px, 72px 72px; }
+}
+
+/* 3. Nav bar: glowing purple bottom edge, and it sticks to the top
+      of the screen while you scroll */
+nav {
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 0 #b44dff, 0 0 18px rgba(180, 77, 255, 0.6);
+}
+
+/* nav links scroll smoothly, and stop just below the sticky nav */
+html {
+    scroll-behavior: smooth;
+}
+
+#ch5_intro, #home, #languages, #projects, #tools, #education, #contact {
+    scroll-margin-top: 56px;
+}
+
+/* 4. "About Me" section: blue gradient -> purple fading to black */
+#home .bg-linear-to-b {
+    --tw-gradient-from: #4a1590 !important;
+    --tw-gradient-to: #12002a !important;
+}
+
+/* 5. Big name: hue-rotate turns its blue shadow AND its blue intro
+      glow purple in one go (white text stays white) */
+#ch5_logo_container h1 {
+    filter: hue-rotate(50deg);
+}
+
+/* small titles that use the text-shadow-[...#203288] class */
+[class*="text-shadow-"] {
+    --tw-text-shadow-color: #4b1a8a;
+}
+
+/* 6. "Undertale Sepia" box ("html" in front makes this beat the
+      .sepia-box rule in index.html's own <style>, which loads later) */
+html .sepia-box {
+    border-color: #b44dff !important;
+    box-shadow: 2px 2px 0 #000, 0 0 16px rgba(180, 77, 255, 0.5) !important;
+}
+
+/* 7. Roses + leaves + intro sparkles: spin the colors around the
+      color wheel (blue -> magenta, green -> teal) */
+#ch5_flowers_left,
+#ch5_flowers_right {
+    filter: hue-rotate(70deg) saturate(1.3);
+}
+
+#particles {
+    filter: hue-rotate(60deg);
+}
+
+/* 8. Bottom of the intro: the original page puts a black shadow
+      there, which made a hard black band on top of the grid.
+      Remove it and fade the roses out smoothly instead. */
+#ch5_intro > div:last-child::after {
+    box-shadow: none !important;
+}
+
+#ch5_intro > div:last-child {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 110px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 110px), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body {
+        animation: none;
+    }
+}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justin Era Antonio | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="fountain.js" defer></script>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="#top">Justin Era Antonio</a>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#languages">Languages</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="container hero-inner">
+                <img class="avatar" src="assets/portrait.png" alt="Portrait of Justin Era Antonio">
+                <div>
+                    <p class="eyebrow">Welcome to my portfolio</p>
+                    <h1>Hi, I'm Justin Era Antonio.</h1>
+                    <p class="lead">A web developer who likes building interactive, polished experiences.</p>
+                    <div class="hero-buttons">
+                        <a class="btn btn-primary" href="#projects">View my work</a>
+                        <!-- This button starts the fountain cutscene (fountain.js) -->
+                        <button id="enter-dark-world" class="btn btn-secondary" type="button">Enter the Dark World</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About Me</h2>
+                <p>Hi, I'm a passionate web developer focused on building interactive, highly polished
+                    experiences! Dive into my projects below where I explore modern web technologies and craft
+                    pixel-perfect UI designs. I am available for freelance work and full-time positions.</p>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills" class="section section-alt">
+            <div class="container">
+                <h2>Skills</h2>
+                <ul class="skill-list">
+                    <li>Extensive experience with HTML, CSS, and modern JS frameworks like React.</li>
+                    <li>Strong eye for design, typography, and micro-interactions.</li>
+                    <li>Experience with backend development in Node.js and Python.</li>
+                    <li>Always learning and improving my craft!</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- LANGUAGES -->
+        <section id="languages" class="section">
+            <div class="container">
+                <h2>Languages</h2>
+
+                <h3 class="lang-group lang-group-main">Main Languages</h3>
+                <ul class="lang-grid">
+                    <li class="lang-card lang-main"><img src="assets/icons/java-original.svg" alt="" aria-hidden="true"><span>Java</span></li>
+                    <li class="lang-card lang-main"><img src="assets/icons/mysql-original.svg" alt="" aria-hidden="true"><span>SQL</span></li>
+                    <li class="lang-card lang-main"><img src="assets/icons/html5-original.svg" alt="" aria-hidden="true"><span>HTML</span></li>
+                    <li class="lang-card lang-main"><img src="assets/icons/php-original.svg" alt="" aria-hidden="true"><span>PHP</span></li>
+                    <li class="lang-card lang-main"><img src="assets/icons/css3-original.svg" alt="" aria-hidden="true"><span>CSS</span></li>
+                    <li class="lang-card lang-main"><img src="assets/icons/javascript-original.svg" alt="" aria-hidden="true"><span>JavaScript</span></li>
+                    <li class="lang-card lang-main"><span class="lang-text-icon" aria-hidden="true">&#8644;</span><span>AJAX</span></li>
+                </ul>
+
+                <h3 class="lang-group lang-group-game">Game Dev &amp; Scripting</h3>
+                <ul class="lang-grid">
+                    <li class="lang-card lang-game"><span class="lang-text-icon" aria-hidden="true">GM</span><span>GML</span></li>
+                    <li class="lang-card lang-game"><img src="assets/icons/python-original.svg" alt="" aria-hidden="true"><span>Python</span></li>
+                    <li class="lang-card lang-game"><img src="assets/icons/csharp-original.svg" alt="" aria-hidden="true"><span>C#</span></li>
+                </ul>
+
+                <h3 class="lang-group">Other Languages</h3>
+                <ul class="lang-grid">
+                    <li class="lang-card"><img src="assets/icons/dart-original.svg" alt="" aria-hidden="true"><span>Dart</span></li>
+                    <li class="lang-card"><img src="assets/icons/cplusplus-original.svg" alt="" aria-hidden="true"><span>C++</span></li>
+                    <li class="lang-card"><img src="assets/icons/typescript-original.svg" alt="" aria-hidden="true"><span>TypeScript</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="section section-alt">
+            <div class="container">
+                <h2>Projects</h2>
+                <article class="project-card">
+                    <img src="assets/undertale-sepia.jpg" alt="Undertale Sepia GameJolt page">
+                    <div class="project-info">
+                        <h3>Undertale Sepia</h3>
+                        <p class="project-tag">GameMaker Studio 2 &middot; GML</p>
+                        <p>An Undertale-inspired fangame.</p>
+                    </div>
+                </article>
+                <div class="project-row">
+                    <article class="project-card project-card-text">
+                        <div class="project-info">
+                            <h3>SAGIP</h3>
+                            <p class="project-tag">Capstone &middot; Academic prototype</p>
+                            <p>Smart AI-powered Government Integrated Platform: an AI-assisted disaster operations and
+                                decision-support system for Philippine LGUs. It covers incident management, rescue
+                                requests, evacuation centers, relief and resources, and AI-assisted rescue
+                                prioritization. The AI supports decisions; people make the final call.</p>
+                        </div>
+                    </article>
+                    <article class="project-card project-card-text">
+                        <div class="project-info">
+                            <h3>School Projects</h3>
+                            <p class="project-tag">Java &middot; PHP &middot; Flutter</p>
+                            <p>Database apps in Java (Swing, JDBC, SQL Server), PHP + MySQL web apps with jQuery/AJAX
+                                CRUD, and Flutter mobile apps in Android Studio.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOLS -->
+        <section id="tools" class="section">
+            <div class="container">
+                <h2>Tools</h2>
+                <ul class="tool-list">
+                    <li>GameMaker Studio 2</li>
+                    <li>Flutter</li>
+                    <li>Android Studio</li>
+                    <li>NetBeans</li>
+                    <li>XAMPP</li>
+                    <li>phpMyAdmin</li>
+                    <li>MySQL</li>
+                    <li>SQL Server</li>
+                    <li>jQuery</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- EDUCATION -->
+        <section id="education" class="section section-alt">
+            <div class="container">
+                <h2>Education</h2>
+                <p class="edu-degree">BS Information Technology</p>
+                <p class="edu-school">Bulacan State University</p>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2>Contact</h2>
+                <p>Email: <a href="mailto:justin.era73@gmail.com">justin.era73@gmail.com</a></p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Justin Era Antonio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- FOUNTAIN CUTSCENE (hidden until the button is pressed) -->
+    <!-- tint = darkens the page like night; canvas = where Kris and the fountain are drawn -->
+    <div id="fountain-tint" class="fountain-tint" aria-hidden="true"></div>
+    <canvas id="fountain-canvas" class="fountain-canvas" aria-hidden="true"></canvas>
+
+</body>
+</html>

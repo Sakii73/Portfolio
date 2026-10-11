@@ -1,0 +1,63 @@
+/* Pixel fonts, stored in assets/fonts so they also work offline
+   (these used to load from Google Fonts). Licenses: assets/fonts/OFL-*.txt */
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('assets/fonts/PixelifySans-Variable.ttf') format('truetype');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+/* Force override the font definitions */
+:root {
+  --font-pixel: 'Press Start 2P', monospace !important;
+  --font-pixel-regular: 'Pixelify Sans', monospace !important;
+}
+
+body {
+  font-family: 'Pixelify Sans', monospace !important;
+}
+
+/* Override the Tailwind CSS font utility classes */
+.font-pixel {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+.font-pixel-regular {
+  font-family: 'Pixelify Sans', monospace !important;
+}
+
+.font-8bit {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+/* Ensure headings use the correct font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Press Start 2P', monospace !important;
+}
+@font-face {
+  font-family: 'Monster Friend Fore';
+  src: url('assets/fonts/MonsterFriendFore.otf') format('opentype'),
+       url('assets/fonts/MonsterFriendFore.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-monster-friend {
+  font-family: 'Monster Friend Fore', 'Monster Friend', 'MonsterFriendFore', 'Press Start 2P', cursive !important;
+}
+
+.title-name {
+  font-size: 2.5rem;
+}
+@media (min-width: 768px) {
+  .title-name {
+    font-size: 5rem;
+  }
+}

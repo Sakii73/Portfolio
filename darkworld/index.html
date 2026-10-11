@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+
+    <title>My Developer Portfolio</title>
+
+    <meta name="description" content="Justin Era Antonio's portfolio.">
+    <meta property="og:title" content="My Developer Portfolio">
+    <meta property="og:description" content="Justin Era Antonio's portfolio.">
+
+    <link rel="stylesheet" href="assets/index.JHL2OQLW.css">
+
+    <script src="assets/index.Y7PA6B22.js" defer=""></script>
+
+
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="purple-theme.css">
+
+    <!-- RETURN TO THE LIGHT WORLD -->
+    <link rel="stylesheet" href="return-to-light.css">
+    <script src="return-to-light.js"></script>
+    <link rel="stylesheet" href="my-sections.css">
+
+    <!-- DARK WORLD MUSIC + mute button -->
+    <link rel="stylesheet" href="music.css">
+    <script src="music.js"></script>
+
+    <!-- UNDERTALE-STYLE DIALOGUE for "Undertale Sepia" -->
+    <link rel="stylesheet" href="dialogue.css">
+    <script src="dialogue.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Monster Friend Fore Web';
+            src: url('assets/fonts/MonsterFriendFore.otf') format('opentype'), local('Monster Friend Fore Regular');
+        }
+
+        .font-monster-friend {
+            font-family: 'Monster Friend Fore Web', 'Monster Friend Fore Regular', 'Monster Friend Fore', 'MonsterFriendFore-Regular', 'Monster Friend', 'Press Start 2P', cursive !important;
+        }
+
+        .huge-name,
+        .huge-name span {
+            font-size: 3rem !important;
+        }
+
+        @media (min-width: 768px) {
+
+            .huge-name,
+            .huge-name span {
+                font-size: 5rem !important;
+            }
+        }
+
+        .sepia-box {
+            background-color: #000 !important;
+            border: 4px solid #004FDE !important;
+            box-shadow: 2px 2px 0 #000 !important;
+        }
+
+        .sepia-box:hover {
+            background-color: #001F7E;
+            border-color: #FFF;
+            transition-duration: 0ms;
+        }
+
+        @keyframes glow-justin {
+
+            0%,
+            9% {
+                opacity: 0;
+                filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #004FDE);
+                transform: scale(1.1);
+            }
+
+            18% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            80% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            95%,
+            100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 0px transparent);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glow-era {
+
+            0%,
+            29% {
+                opacity: 0;
+                filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #004FDE);
+                transform: scale(1.1);
+            }
+
+            38% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            80% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            95%,
+            100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 0px transparent);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glow-antonio {
+
+            0%,
+            49% {
+                opacity: 0;
+                filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #004FDE);
+                transform: scale(1.1);
+            }
+
+            58% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            80% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #004FDE);
+                transform: scale(1.05);
+            }
+
+            95%,
+            100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 0px transparent);
+                transform: scale(1);
+            }
+        }
+
+        .animate-justin {
+            animation: glow-justin 5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .animate-era {
+            animation: glow-era 5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .animate-antonio {
+            animation: glow-antonio 5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+    </style>
+
+</head>
+
+<body class="default  bg-black" data-controller="scroll">
+    <nav class="w-full z-40 overflow-hidden bg-nav-blue">
+        <div class="relative w-full">
+            <ul
+                class="flex items-center justify-between w-full max-w-2xl mx-auto gap-1 md:gap-6 h-12 pr-[96px] md:pr-0 pl-2 md:pl-0 font-8bit uppercase">
+                <li>
+                    <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
+                        href="#ch5_intro">Portfolio</a>
+                </li>
+                <li>
+                    <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
+                        href="#home">Skills</a>
+                </li>
+                <li>
+                    <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
+                        href="#languages">Languages</a>
+                </li>
+                <li>
+                    <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
+                        href="#projects">Projects</a>
+                </li>
+                <li>
+                    <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
+                        href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- RETURN TO THE LIGHT WORLD button + white flash (return-to-light.js) -->
+    <button id="return-to-light" class="world-return" type="button">Return to the Light World</button>
+    <div id="light-flash" class="light-flash" aria-hidden="true"></div>
+
+    <!-- MUSIC on/off (music.js) -->
+    <button id="music-toggle" class="music-toggle" type="button" aria-pressed="false">Music: On</button>
+
+
+    <main>
+        <div id="home_container" class="flex flex-col gap-16 pb-16 overflow-visible" data-controller="scroll">
+            <section id="ch5_intro" class="relative">
+                <div id="particles"
+                    class="absolute inset-0 justify-center text-center w-full h-full overflow-hidden pointer-events-none z-0 hidden sm:flex animate-fade-in-top motion-reduce:hidden"
+                    aria-hidden="true" style="animation-delay: 3.5s; opacity: 0; animation-fill-mode: both;">
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="101"
+                        data-scroll-target="parallax"
+                        style="margin-left: -795px; margin-top: 413px; width: 4px; height: 4px; background-color: rgb(117, 130, 255); animation-delay: -2.9s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="90"
+                        data-scroll-target="parallax"
+                        style="margin-left: -680px; margin-top: 256px; width: 4px; height: 4px; background-color: rgb(255, 255, 255); animation-delay: -3.3s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="53"
+                        data-scroll-target="parallax"
+                        style="margin-left: 787px; margin-top: 586px; width: 2px; height: 2px; background-color: rgb(105, 156, 255); animation-delay: -4.6s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="64"
+                        data-scroll-target="parallax"
+                        style="margin-left: 592px; margin-top: 792px; width: 3px; height: 3px; background-color: rgb(180, 176, 255); animation-delay: -0.7s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="50"
+                        data-scroll-target="parallax"
+                        style="margin-left: 454px; margin-top: 100px; width: 4px; height: 4px; background-color: rgb(120, 122, 255); animation-delay: -2.6s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="43"
+                        data-scroll-target="parallax"
+                        style="margin-left: 535px; margin-top: 364px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -0.4s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="80"
+                        data-scroll-target="parallax"
+                        style="margin-left: 88px; margin-top: 640px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -1.8s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="35"
+                        data-scroll-target="parallax"
+                        style="margin-left: -768px; margin-top: 318px; width: 4px; height: 4px; background-color: rgb(255, 255, 255); animation-delay: -0.8s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="95"
+                        data-scroll-target="parallax"
+                        style="margin-left: 218px; margin-top: 195px; width: 5px; height: 5px; background-color: rgb(142, 157, 255); animation-delay: -3.9s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="48"
+                        data-scroll-target="parallax"
+                        style="margin-left: -271px; margin-top: 674px; width: 2px; height: 2px; background-color: rgb(143, 159, 255); animation-delay: -5.6s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="43"
+                        data-scroll-target="parallax"
+                        style="margin-left: -749px; margin-top: 534px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -0.4s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="106"
+                        data-scroll-target="parallax"
+                        style="margin-left: 211px; margin-top: 671px; width: 5px; height: 5px; background-color: rgb(166, 120, 255); animation-delay: -6.0s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="100"
+                        data-scroll-target="parallax"
+                        style="margin-left: -120px; margin-top: 219px; width: 3px; height: 3px; background-color: rgb(187, 112, 255); animation-delay: -3.2s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="101"
+                        data-scroll-target="parallax"
+                        style="margin-left: -731px; margin-top: 428px; width: 4px; height: 4px; background-color: rgb(194, 188, 255); animation-delay: -3.6s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="101"
+                        data-scroll-target="parallax"
+                        style="margin-left: 771px; margin-top: 699px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -6.0s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="102"
+                        data-scroll-target="parallax"
+                        style="margin-left: 349px; margin-top: 346px; width: 5px; height: 5px; background-color: rgb(255, 255, 255); animation-delay: -3.7s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="70"
+                        data-scroll-target="parallax"
+                        style="margin-left: 444px; margin-top: 670px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -1.0s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="91"
+                        data-scroll-target="parallax"
+                        style="margin-left: 768px; margin-top: 246px; width: 4px; height: 4px; background-color: rgb(255, 255, 255); animation-delay: -3.4s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="58"
+                        data-scroll-target="parallax"
+                        style="margin-left: -278px; margin-top: 494px; width: 5px; height: 5px; background-color: rgb(255, 255, 255); animation-delay: -3.9s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="32"
+                        data-scroll-target="parallax"
+                        style="margin-left: -19px; margin-top: 601px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -0.8s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="110"
+                        data-scroll-target="parallax"
+                        style="margin-left: 475px; margin-top: 754px; width: 3px; height: 3px; background-color: rgb(255, 255, 255); animation-delay: -1.5s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="30"
+                        data-scroll-target="parallax"
+                        style="margin-left: -433px; margin-top: 279px; width: 5px; height: 5px; background-color: rgb(255, 255, 255); animation-delay: -4.5s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="120"
+                        data-scroll-target="parallax"
+                        style="margin-left: -698px; margin-top: 509px; width: 3px; height: 3px; background-color: rgb(129, 133, 255); animation-delay: -3.8s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="109"
+                        data-scroll-target="parallax"
+                        style="margin-left: 255px; margin-top: 652px; width: 5px; height: 5px; background-color: rgb(187, 108, 255); animation-delay: -4.4s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="67"
+                        data-scroll-target="parallax"
+                        style="margin-left: -335px; margin-top: 444px; width: 3px; height: 3px; background-color: rgb(255, 255, 255); animation-delay: -5.0s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="90"
+                        data-scroll-target="parallax"
+                        style="margin-left: 717px; margin-top: 600px; width: 3px; height: 3px; background-color: rgb(255, 255, 255); animation-delay: -1.6s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="101"
+                        data-scroll-target="parallax"
+                        style="margin-left: -103px; margin-top: 281px; width: 2px; height: 2px; background-color: rgb(164, 170, 255); animation-delay: -3.1s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="44"
+                        data-scroll-target="parallax"
+                        style="margin-left: 583px; margin-top: 777px; width: 3px; height: 3px; background-color: rgb(255, 255, 255); animation-delay: -1.1s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="47"
+                        data-scroll-target="parallax"
+                        style="margin-left: 678px; margin-top: 217px; width: 3px; height: 3px; background-color: rgb(255, 255, 255); animation-delay: -0.8s;"></span>
+                    <span class="absolute animate-pulse motion-safe:translate-y-0 border-0 parallax" data-distance="104"
+                        data-scroll-target="parallax"
+                        style="margin-left: 680px; margin-top: 333px; width: 2px; height: 2px; background-color: rgb(255, 255, 255); animation-delay: -1.3s;"></span>
+                </div>
+
+                <div id="ch5_cover" class="absolute w-full h-full cursor-pointer hidden motion-safe:block z-50 !hidden"
+                    data-ch5stars-target="cover" data-action="click-&gt;ch5stars#skipIntro" aria-hidden="true"></div>
+                <div
+                    class="relative flex flex-col items-center gap-4 pb-16 overflow-hidden [&amp;::after]:content-[&#39;&#39;] [&amp;::after]:absolute [&amp;::after]:inset-0 [&amp;::after]:shadow-[inset_0_-80px_40px_-20px_rgba(0,0,0,1)] [&amp;::after]:pointer-events-none [&amp;::after]:z-35">
+                    <div id="ch5_logo_container"
+                        class="relative max-w-4xl w-full flex flex-col items-center justify-center gap-16 py-16">
+
+                        <h1 class="text-white font-monster-friend text-center z-10 huge-name flex flex-wrap justify-center gap-x-12 md:gap-x-20 gap-y-10"
+                            style="text-shadow: 6px 6px 0 #203288; line-height: 1.5;">
+                            <span class="inline-block animate-justin mx-2 md:mx-4"
+                                style="margin-right: 2rem;">JUSTIN&nbsp;</span>
+                            <span class="inline-block animate-era mx-2 md:mx-4">ERA</span>
+                            <span class="inline-block animate-antonio mx-2 md:mx-4">ANTONIO</span>
+                        </h1>
+                        <span
+                            class="mt-4 text-white text-2xl md:text-5xl font-pixel text-center tracking-tighter text-shadow-[1px_1px_0_#203288] motion-safe:opacity-0 motion-safe:animate-fade-in-top"
+                            style="animation-delay: 3.5s">WELCOME TO MY PORTFOLIO</span>
+                    </div>
+                    <div id="game"
+                        class="flex flex-col items-center justify-center gap-2 z-30 mb-8 motion-safe:opacity-0 motion-safe:animate-fade-in "
+                        style="animation-delay: 3.5s">
+                        <h2 class="text-white text-lg uppercase font-pixel text-shadow-[1px_1px_0_#203288]">Latest Work
+                        </h2>
+                        <div
+                            class="relative flex flex-row flex-wrap justify-center items-center max-w-md md:max-w-lg mx-auto gap-4">
+                            <div
+                                class="sepia-box border-4 border-[#004FDE] flex items-center justify-center rounded-lg p-3 w-64 h-20 md:w-72 md:h-24 transition-all duration-150 cursor-pointer">
+                                <span class="font-pixel text-xl tracking-wider"
+                                    style="color: #f9dfa7; text-shadow: 1px 1px 0 #000;">Undertale Sepia</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ch5_trailer" class="container mx-auto max-w-2xl px-4 pb-12 z-30">
+                        <div class="border border-2 border-deltarune-blue aspect-video w-full flex items-center justify-center bg-black motion-safe:opacity-0 motion-safe:animate-fade-in transition-colors hover:border-white "
+                            style="animation-delay: 4s">
+                            <img src="assets/undertale-sepia.jpg" alt="Undertale Sepia GameJolt Page"
+                                class="w-full h-full object-cover">
+                        </div>
+
+
+
+                    </div>
+                    <div id="ch5_flowers_left"
+                        class="absolute top-0 md:-top-12 w-[167px] md:w-[334px] lg:w-[501px] xl:w-[668px] left-0 pointer-events-none z-20 motion-safe:opacity-0 motion-safe:animate-slide-from-left motion-reduce:-translate-x-1/4 "
+                        style="animation-delay: 3.5s">
+                        <img src="assets/ch5-flowers.png" class="absolute image-pixel w-full" aria-hidden="true"
+                            alt="Flowers">
+                        <div class="relative w-[167px] md:w-[334px] lg:w-[501px] xl:w-[668px] h-[800px] opacity-0 animate-fade-in motion-reduce:hidden "
+                            style="animation-delay: 3s" data-ch5stars-target="containerLeft"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-3.png" alt="Star" aria-hidden="true"
+                                style="top: 15%; right: 16%; animation-delay: -1s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-6.png" alt="Star" aria-hidden="true"
+                                style="top: 28%; right: 38%; animation-delay: -1s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-2.png" alt="Star" aria-hidden="true"
+                                style="top: 38%; right: 17%; animation-delay: -0s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-4.png" alt="Star" aria-hidden="true"
+                                style="top: 51%; right: 13%; animation-delay: -1.3333333333333333s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-5.png" alt="Star" aria-hidden="true"
+                                style="top: 63%; right: 24%; animation-delay: -1.6666666666666667s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-5.png" alt="Star" aria-hidden="true"
+                                style="top: 71%; right: 14%; animation-delay: -3.6666666666666665s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-5.png" alt="Star" aria-hidden="true"
+                                style="top: 71%; right: 19%; animation-delay: -0s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-2.png" alt="Star" aria-hidden="true"
+                                style="top: 84%; right: 33%; animation-delay: -2.3333333333333335s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-6.png" alt="Star" aria-hidden="true"
+                                style="top: 103%; right: 38%; animation-delay: -0s"></div>
+                    </div>
+                    <div id="ch5_flowers_right"
+                        class="absolute top-0 md:-top-12 w-[167px] md:w-[334px] lg:w-[501px] xl:w-[668px] right-0 pointer-events-none z-20 motion-safe:opacity-0 motion-safe:animate-slide-from-right motion-reduce:-scale-x-100 motion-reduce:translate-x-1/4 "
+                        style="animation-delay: 3.5s">
+                        <img src="assets/ch5-flowers.png" class="absolute image-pixel w-full" aria-hidden="true"
+                            alt="Flowers">
+                        <div class="relative w-[167px] md:w-[334px] lg:w-[501px] xl:w-[668px] h-[800px] opacity-0 animate-fade-in motion-reduce:hidden "
+                            style="animation-delay: 3s" data-ch5stars-target="containerRight"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-7.png" alt="Star" aria-hidden="true"
+                                style="top: 22%; right: 21%; animation-delay: -0.6666666666666666s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-3.png" alt="Star" aria-hidden="true"
+                                style="top: 21%; right: 23%; animation-delay: -2s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-5.png" alt="Star" aria-hidden="true"
+                                style="top: 35%; right: 33%; animation-delay: -0s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-2.png" alt="Star" aria-hidden="true"
+                                style="top: 49%; right: 16%; animation-delay: -1.3333333333333333s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-3.png" alt="Star" aria-hidden="true"
+                                style="top: 60%; right: 31%; animation-delay: -1s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-4.png" alt="Star" aria-hidden="true"
+                                style="top: 73%; right: 10%; animation-delay: -2.3333333333333335s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-2.png" alt="Star" aria-hidden="true"
+                                style="top: 74%; right: 31%; animation-delay: -2.6666666666666665s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-3.png" alt="Star" aria-hidden="true"
+                                style="top: 92%; right: 24%; animation-delay: -0.6666666666666666s"><img
+                                class="absolute image-pixel animate-ch5-star md:scale-125 lg:scale-150"
+                                src="assets/ch5-star-2.png" alt="Star" aria-hidden="true"
+                                style="top: 97%; right: 33%; animation-delay: -3s"></div>
+                    </div>
+                </div>
+            </section>
+            <section id="home">
+                <div class="relative bg-linear-to-b from-[#004FDE] to-[#001F7E] motion-safe:animate-fade-in">
+                    <div class="container mx-auto max-w-2xl flex flex-col gap-6 px-4 py-8">
+
+                        <div class="border border-2 border-deltarune-blue aspect-video w-full flex items-center justify-center bg-black motion-safe:opacity-0 motion-safe:animate-fade-in transition-colors hover:border-white"
+                            style="animation-delay: 0.25s">
+                            <img src="assets/portrait.png" alt="My Portrait" class="w-full h-full object-cover">
+                        </div>
+
+
+
+
+                        <h2 class="highlight-yellow font-pixel text-lg md:text-2xl text-center mt-8">About Me</h2>
+                        <p class="highlight-white font-pixel text-lg leading-relaxed mb-6">Hi, I'm a passionate web
+                            developer focused on building interactive, highly polished experiences! Dive into my
+                            projects below where I explore modern web technologies and craft pixel-perfect UI designs. I
+                            am available for freelance work and full-time positions.</p>
+                        <ul class="highlight-white font-pixel list-[square] px-8 flex flex-col gap-4 text-lg">
+                            <li>Extensive experience with HTML, CSS, and modern JS frameworks like React.</li>
+                            <li>Strong eye for design, typography, and micro-interactions.</li>
+                            <li>Experience with backend development in Node.js and Python.</li>
+                            <li>Always learning and improving my craft!</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LANGUAGES (styles in my-sections.css) -->
+            <section id="languages" class="lang-section">
+                <h2 class="lang-title">Languages</h2>
+
+                <!-- Highlight 1: main languages (yellow) -->
+                <h3 class="lang-group-title lang-group-main">Main Languages</h3>
+                <ul class="lang-grid">
+                    <li class="lang-tile lang-main"><img src="assets/icons/java-original.svg" alt="" aria-hidden="true"><span class="lang-name">Java</span></li>
+                    <li class="lang-tile lang-main"><img src="assets/icons/mysql-original.svg" alt="" aria-hidden="true"><span class="lang-name">SQL</span></li>
+                    <li class="lang-tile lang-main"><img src="assets/icons/html5-original.svg" alt="" aria-hidden="true"><span class="lang-name">HTML</span></li>
+                    <li class="lang-tile lang-main"><img src="assets/icons/php-original.svg" alt="" aria-hidden="true"><span class="lang-name">PHP</span></li>
+                    <li class="lang-tile lang-main"><img src="assets/icons/css3-original.svg" alt="" aria-hidden="true"><span class="lang-name">CSS</span></li>
+                    <li class="lang-tile lang-main"><img src="assets/icons/javascript-original.svg" alt="" aria-hidden="true"><span class="lang-name">JavaScript</span></li>
+                    <li class="lang-tile lang-main"><span class="lang-text-icon" aria-hidden="true">&#8644;</span><span class="lang-name">AJAX</span></li>
+                </ul>
+
+                <!-- Highlight 2: game dev & scripting (cyan) -->
+                <h3 class="lang-group-title lang-group-game">Game Dev &amp; Scripting</h3>
+                <ul class="lang-grid">
+                    <li class="lang-tile lang-game"><span class="lang-text-icon" aria-hidden="true">GM</span><span class="lang-name">GML</span></li>
+                    <li class="lang-tile lang-game"><img src="assets/icons/python-original.svg" alt="" aria-hidden="true"><span class="lang-name">Python</span></li>
+                    <li class="lang-tile lang-game"><img src="assets/icons/csharp-original.svg" alt="" aria-hidden="true"><span class="lang-name">C#</span></li>
+                </ul>
+
+                <!-- Other languages -->
+                <h3 class="lang-group-title">Other Languages</h3>
+                <ul class="lang-grid">
+                    <li class="lang-tile"><img src="assets/icons/dart-original.svg" alt="" aria-hidden="true"><span class="lang-name">Dart</span></li>
+                    <li class="lang-tile"><img src="assets/icons/cplusplus-original.svg" alt="" aria-hidden="true"><span class="lang-name">C++</span></li>
+                    <li class="lang-tile"><img src="assets/icons/typescript-original.svg" alt="" aria-hidden="true"><span class="lang-name">TypeScript</span></li>
+                </ul>
+            </section>
+
+            <!-- PROJECTS (styles in my-sections.css) -->
+            <section id="projects" class="lang-section">
+                <h2 class="lang-title">Projects</h2>
+                <div class="project-list">
+                    <article class="project-box sepia-trigger">
+                        <h3 class="project-name">Undertale Sepia</h3>
+                        <p class="project-tag">GameMaker Studio 2 &middot; GML</p>
+                        <p>An Undertale-inspired fangame.</p>
+                    </article>
+                    <article class="project-box">
+                        <h3 class="project-name">SAGIP</h3>
+                        <p class="project-tag">Capstone &middot; Academic prototype</p>
+                        <p>Smart AI-powered Government Integrated Platform: an AI-assisted disaster operations and
+                            decision-support system for Philippine LGUs. It covers incident management, rescue requests,
+                            evacuation centers, relief and resources, and AI-assisted rescue prioritization. The AI
+                            supports decisions; people make the final call.</p>
+                    </article>
+                    <article class="project-box">
+                        <h3 class="project-name">School Projects</h3>
+                        <p class="project-tag">Java &middot; PHP &middot; Flutter</p>
+                        <p>Database apps in Java (Swing, JDBC, SQL Server), PHP + MySQL web apps with jQuery/AJAX
+                            CRUD, and Flutter mobile apps in Android Studio.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- TOOLS -->
+            <section id="tools" class="lang-section">
+                <h2 class="lang-title">Tools</h2>
+                <ul class="tool-list">
+                    <li>GameMaker Studio 2</li>
+                    <li>Flutter</li>
+                    <li>Android Studio</li>
+                    <li>NetBeans</li>
+                    <li>XAMPP</li>
+                    <li>phpMyAdmin</li>
+                    <li>MySQL</li>
+                    <li>SQL Server</li>
+                    <li>jQuery</li>
+                </ul>
+            </section>
+
+            <!-- EDUCATION -->
+            <section id="education" class="lang-section">
+                <h2 class="lang-title">Education</h2>
+                <div class="project-box edu-box">
+                    <h3 class="project-name">BS Information Technology</h3>
+                    <p>Bulacan State University</p>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER: contact (styles in my-sections.css) -->
+    <footer id="contact" class="dw-footer">
+        <p class="dw-footer-title">Contact</p>
+        <p><a href="mailto:justin.era73@gmail.com">justin.era73@gmail.com</a></p>
+        <p class="dw-footer-copy">&copy; 2026 Justin Era Antonio. All rights reserved.</p>
+    </footer>
+
+
+
+
+</body>
+
+</html>

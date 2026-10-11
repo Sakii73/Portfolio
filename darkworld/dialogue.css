@@ -1,0 +1,123 @@
+/* =========================================================
+   dialogue.css — the Undertale-style dialogue box
+   (!important on margin/padding/border/colors for buttons:
+   the site's base CSS resets those on every element)
+   ========================================================= */
+
+/* full-screen layer behind the box (dims the page a little) */
+.ut-shade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 150;                 /* above the page and the corner buttons */
+    display: none;
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.ut-shade.show {
+    display: block;
+}
+
+/* the black box with the thick white border, at the bottom */
+.ut-box {
+    position: absolute;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%);
+    width: min(92vw, 680px);
+    padding: 22px 24px 14px !important;
+    background-color: #000;
+    border: 6px solid #ffffff !important;
+    cursor: pointer;
+}
+
+.ut-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+}
+
+/* your face */
+.ut-face {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    object-fit: cover;
+    image-rendering: pixelated;   /* keeps the pixel art sharp */
+}
+
+/* the text area is exactly 3 lines tall; anything more goes to the next page */
+.ut-text {
+    flex: 1;
+    height: 6em;                  /* 3 lines x line-height 2 */
+    overflow: hidden;
+    margin: 0 !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px;
+    line-height: 2;
+    color: #ffffff;
+    white-space: pre-wrap;
+}
+
+.ut-hidden {
+    visibility: hidden;
+}
+
+/* OK button, bottom right, like a menu option */
+.ut-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px !important;
+}
+
+.ut-ok {
+    padding: 6px 12px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px !important;
+    color: #ffffff !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    cursor: pointer;
+}
+
+/* hovered / selected = yellow with a red heart, like choosing an option in the game */
+.ut-ok:hover,
+.ut-ok:focus-visible {
+    color: #F9FF10 !important;
+    outline: none;
+}
+
+.ut-ok:hover::before,
+.ut-ok:focus-visible::before {
+    content: "\2665";             /* heart */
+    margin-right: 10px;
+    color: #ff0000;
+}
+
+/* the things you click to open it */
+#ch5_trailer img,
+.sepia-trigger {
+    cursor: pointer;
+}
+
+/* phones: smaller face + text */
+@media (max-width: 600px) {
+    .ut-box {
+        bottom: 16px;
+        padding: 14px 14px 10px !important;
+        border-width: 4px !important;
+    }
+    .ut-row {
+        gap: 12px;
+    }
+    .ut-face {
+        width: 64px;
+        height: 64px;
+    }
+    .ut-text,
+    .ut-ok {
+        font-size: 11px !important;
+    }
+}

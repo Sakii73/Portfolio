@@ -1,0 +1,271 @@
+/* =========================================================
+   my-sections.css — your own sections on the Dark World page
+   (Languages, the Contact footer, and when the corner buttons appear)
+
+   Why !important on margin / padding / border?
+   The site's main CSS resets margin, padding and border on
+   EVERY element with a high-priority selector trick, so normal
+   rules lose. Colors, sizes and layout don't need it.
+   ========================================================= */
+
+
+/* ---------- LANGUAGES ---------- */
+.lang-section {
+    width: 100%;           /* without this, the page's flex layout shrinks it to one tile wide */
+    max-width: 42rem;
+    margin: 0 auto !important;
+    padding: 0 16px 48px !important;
+    text-align: center;
+}
+
+.lang-title {
+    margin: 0 0 24px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 24px;                                 /* same as "News and Updates" */
+    text-transform: uppercase;
+    color: #F9FF10;                                  /* Deltarune yellow */
+    text-shadow: 2px 2px 0 #4C4C00;
+}
+
+.lang-group-title {
+    margin: 28px 0 12px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 #2a0845;
+}
+
+.lang-group-main {
+    color: #F9FF10;
+}
+
+.lang-group-game {
+    color: #5FF0FF;
+}
+
+/* 3 boxes per row; a row with fewer boxes stays centered */
+.lang-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+
+/* one language = one RPG-style box (same look as the "Undertale Sepia" box) */
+.lang-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: calc((100% - 24px) / 3);     /* 3 per row (2 gaps of 12px) */
+    min-height: 120px;
+    padding: 14px 8px !important;
+    background-color: #000;
+    border: 4px solid #b44dff !important;            /* Dark World purple */
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 #000, 0 0 12px rgba(180, 77, 255, 0.35);
+    transition: transform 0.15s, background-color 0.15s;
+}
+
+.lang-tile:hover {
+    transform: translateY(-3px);
+    background-color: #2a0845;
+    border-color: #ffffff !important;
+}
+
+.lang-tile img {
+    width: 48px;
+    height: 48px;
+    /* thin white glow so dark logos still show on black */
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+}
+
+/* for languages without an icon file (AJAX, GML) */
+.lang-text-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px;
+    color: #ffffff;
+    border: 2px solid #ffffff !important;
+    border-radius: 6px;
+}
+
+.lang-name {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #ffffff;
+}
+
+/* HIGHLIGHT 1: main languages = yellow */
+.lang-main {
+    border-color: #F9FF10 !important;
+    box-shadow: 2px 2px 0 #000, 0 0 14px rgba(249, 255, 16, 0.45);
+}
+
+.lang-main .lang-name,
+.lang-main .lang-text-icon {
+    color: #F9FF10;
+    border-color: #F9FF10 !important;
+}
+
+/* HIGHLIGHT 2: game dev & scripting = cyan */
+.lang-game {
+    border-color: #5FF0FF !important;
+    box-shadow: 2px 2px 0 #000, 0 0 14px rgba(95, 240, 255, 0.45);
+}
+
+.lang-game .lang-name,
+.lang-game .lang-text-icon {
+    color: #5FF0FF;
+    border-color: #5FF0FF !important;
+}
+
+
+/* phones: smaller text so long names (JavaScript) fit 3 per row */
+@media (max-width: 480px) {
+    .lang-name {
+        font-size: 9px;
+    }
+    .lang-tile img,
+    .lang-text-icon {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+
+/* ---------- FOOTER / CONTACT ---------- */
+.dw-footer {
+    margin: 0 !important;
+    padding: 40px 16px 90px !important;      /* extra bottom space so the fixed buttons don't cover it */
+    text-align: center;
+    background-color: #07000f;
+    border-top: 4px solid #b44dff !important;
+    box-shadow: 0 -2px 18px rgba(180, 77, 255, 0.4);
+}
+
+.dw-footer p {
+    margin: 0 0 10px !important;
+}
+
+.dw-footer-title {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 20px;
+    color: #F9FF10;
+    text-transform: uppercase;
+}
+
+/* links: !important because the site's reset makes every link copy
+   its parent's color (black here = invisible) */
+.dw-footer a {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px;
+    color: #ffffff !important;
+    text-decoration: underline !important;
+}
+
+.dw-footer a:hover {
+    color: #F9FF10 !important;
+}
+
+.dw-footer-copy {
+    font-size: 12px;
+    color: #7F7F7F;
+}
+
+
+/* ---------- Corner buttons: wait for the name intro ----------
+   The name pops in first; at 3.5s the rest of the page fades in
+   ("Welcome to my portfolio", Latest Work). The Music and Return
+   buttons fade in at that same moment. visibility: hidden while
+   waiting means they can't be clicked before they show up. */
+.world-return,
+.music-toggle {
+    animation: ui-appear 0.6s ease-out 3.5s both;
+}
+
+@keyframes ui-appear {
+    from { opacity: 0; visibility: hidden; }
+    to   { opacity: 1; visibility: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .world-return,
+    .music-toggle {
+        animation: none;
+    }
+}
+
+
+/* ---------- PROJECTS / EDUCATION boxes ---------- */
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.project-box {
+    padding: 18px 20px !important;
+    text-align: left;
+    background-color: #000;
+    border: 4px solid #b44dff !important;
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 #000, 0 0 12px rgba(180, 77, 255, 0.35);
+}
+
+.project-box p {
+    margin: 0 !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 12px;
+    line-height: 1.9;
+    color: #ffffff;
+}
+
+.project-name {
+    margin: 0 0 8px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 16px;
+    color: #F9FF10;
+}
+
+.project-box .project-tag {
+    margin: 0 0 12px !important;
+    font-size: 10px;
+    color: #5FF0FF;
+}
+
+.edu-box {
+    text-align: center;
+}
+
+
+/* ---------- TOOLS chips ---------- */
+.tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+
+.tool-list li {
+    padding: 10px 14px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: #000;
+    border: 2px solid #b44dff !important;
+    border-radius: 6px;
+}

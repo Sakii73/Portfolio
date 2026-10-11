@@ -1,0 +1,449 @@
+/* =========================================================
+   LIGHT WORLD — a normal, plain portfolio
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #1f2328;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    line-height: 1.25;
+    margin: 0 0 12px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+a {
+    color: #2563eb;
+}
+
+
+/* ---------- Header ---------- */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 60px;
+}
+
+.logo {
+    font-weight: 700;
+    color: #1f2328;
+    text-decoration: none;
+}
+
+.site-header nav {
+    display: flex;
+    gap: 20px;
+}
+
+.site-header nav a {
+    color: #4b5563;
+    text-decoration: none;
+}
+
+.site-header nav a:hover {
+    color: #1f2328;
+}
+
+
+/* ---------- Hero ---------- */
+.hero {
+    padding: 72px 0;
+    background-color: #f6f7f9;
+}
+
+.hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.avatar {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    border: 4px solid #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.eyebrow {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+}
+
+.hero h1 {
+    font-size: 40px;
+}
+
+.lead {
+    margin: 0 0 24px;
+    font-size: 19px;
+    color: #4b5563;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-secondary {
+    color: #1f2328;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background-color: #f3f4f6;
+}
+
+
+/* ---------- Sections ---------- */
+.section {
+    padding: 56px 0;
+}
+
+.section-alt {
+    background-color: #f6f7f9;
+}
+
+.skill-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.skill-list li {
+    margin-bottom: 8px;
+}
+
+.project-card {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 16px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.project-card img {
+    width: 55%;
+    border-radius: 6px;
+}
+
+.project-info p {
+    margin: 0;
+    color: #4b5563;
+}
+
+
+/* ---------- Footer ---------- */
+.site-footer {
+    padding: 24px 0;
+    font-size: 14px;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* ---------- Phones ---------- */
+@media (max-width: 700px) {
+    .hero-inner,
+    .project-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .project-card img {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   FOUNTAIN CUTSCENE (used by fountain.js)
+   ========================================================= */
+
+/* The page gets darker (night) or washed out (during the white beam) */
+.fountain-tint {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s, background-color 1.5s, backdrop-filter 1.5s;
+}
+
+.fountain-tint.night {
+    opacity: 1;
+    background-color: rgba(20, 16, 60, 0.62);
+    backdrop-filter: grayscale(0.4) brightness(0.7);
+    -webkit-backdrop-filter: grayscale(0.4) brightness(0.7);
+}
+
+.fountain-tint.washed {
+    opacity: 1;
+    background-color: rgba(230, 230, 235, 0.45);
+    backdrop-filter: grayscale(1) brightness(1.2);
+    -webkit-backdrop-filter: grayscale(1) brightness(1.2);
+}
+
+/* The game canvas: small resolution, stretched with sharp pixels */
+.fountain-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 101;
+    image-rendering: pixelated;
+    display: none;
+    cursor: pointer;          /* click to skip */
+}
+
+body.cutscene-playing .fountain-canvas {
+    display: block;
+}
+
+body.cutscene-playing {
+    overflow: hidden;          /* no scrolling during the cutscene */
+}
+
+/* Coming back from the Dark World: start white, fade in */
+body.from-dark::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    background-color: #ffffff;
+    pointer-events: none;
+    animation: light-fade-in 0.8s ease-out forwards;
+}
+
+@keyframes light-fade-in {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+
+/* ---------- Languages ---------- */
+.lang-group {
+    margin: 28px 0 12px;
+    font-size: 18px;
+    color: #4b5563;
+}
+
+.lang-group-main {
+    color: #1d4ed8;          /* highlight 1: blue */
+}
+
+.lang-group-game {
+    color: #7c3aed;          /* highlight 2: purple */
+}
+
+/* 3 cards per row; a row with fewer cards stays centered */
+.lang-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lang-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: calc((100% - 24px) / 3);
+    min-height: 110px;
+    padding: 14px 8px;
+    font-weight: 600;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.lang-card img,
+.lang-text-icon {
+    width: 44px;
+    height: 44px;
+}
+
+/* for languages without an icon file (AJAX, GML) */
+.lang-text-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+}
+
+.lang-main {
+    color: #1d4ed8;
+    background-color: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.lang-game {
+    color: #6d28d9;
+    background-color: #f5f3ff;
+    border-color: #c4b5fd;
+}
+
+@media (max-width: 480px) {
+    .lang-card {
+        font-size: 14px;
+    }
+    .lang-card img,
+    .lang-text-icon {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+
+/* ---------- Projects (extra cards) ---------- */
+.project-tag {
+    margin: 0 0 8px !important;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb !important;
+}
+
+.project-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.project-card-text {
+    flex: 1;
+    align-items: flex-start;
+}
+
+.project-card-text p {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 700px) {
+    .project-row {
+        flex-direction: column;
+    }
+}
+
+
+/* ---------- Tools ---------- */
+.tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tool-list li {
+    padding: 8px 14px;
+    font-size: 15px;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+}
+
+
+/* ---------- Education ---------- */
+.edu-degree {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.edu-school {
+    margin: 0;
+    color: #4b5563;
+}
+
+/* nav links stop just below the sticky header */
+section {
+    scroll-margin-top: 70px;
+}

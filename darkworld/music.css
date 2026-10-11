@@ -1,0 +1,38 @@
+/* Music on/off button (bottom-left). Same look as the
+   "Return to the Light World" button; !important for the same
+   reason (the site's CSS resets every button). */
+.music-toggle {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 90;
+    padding: 10px 14px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    color: white !important;
+    background-color: rgba(20, 0, 40, 0.85) !important;
+    border: 2px solid #b44dff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 14px rgba(180, 77, 255, 0.7);
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #2a0845;
+}
+
+.music-toggle:hover {
+    border-color: #F9FF10 !important;
+}
+
+/* muted = dimmer, so you can tell at a glance */
+.music-toggle[aria-pressed="true"] {
+    color: #7F7F7F !important;
+}
+
+/* phones: put the music button above the return button so they don't overlap */
+@media (max-width: 600px) {
+    .music-toggle {
+        bottom: 66px;
+        left: auto;
+        right: 16px;
+    }
+}
