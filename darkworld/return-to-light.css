@@ -26,9 +26,9 @@
     border-color: #F9FF10 !important;   /* Deltarune yellow, same as the site's hover */
 }
 
-/* The light: a white band that starts as a thin line in the middle
-   and grows left and right until it covers the whole screen.
-   scaleX(0) = zero width, scaleX(1) = full width, grown from the center. */
+/* The light: drawn by return-to-light.js on a small canvas that
+   CSS stretches over the screen with sharp, chunky pixels
+   (same trick as the fountain cutscene). */
 .light-flash {
     position: fixed;
     top: 0;
@@ -36,14 +36,17 @@
     width: 100%;
     height: 100%;
     z-index: 200;
-    background-color: #ffffff !important;
-    transform: scaleX(0);
-    transform-origin: center;
+    display: none;
     pointer-events: none;
-    transition: transform 1.2s ease-in;
 }
 
 .light-flash.show {
-    transform: scaleX(1);
-    pointer-events: auto;      /* block clicks while it's white */
+    display: block;
+    pointer-events: auto;      /* block clicks while the light is on */
+}
+
+.light-flash canvas {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
 }

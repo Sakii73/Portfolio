@@ -75,23 +75,61 @@ spr_kris_fountain_ball.img.addEventListener("load", function () {
 });
 
 
-// ===== Sounds =====
-function makeSound(file) {
-    const a = new Audio(ASSETS + "sounds/" + file);
-    a.preload = "auto";
-    a.volume = SOUND_VOLUME;
-    return a;
+// ===== Sounds (Web Audio API) =====
+// Each sound file is loaded ONCE into memory, then plays instantly as
+// many times as needed. (Phones lag or drop sounds if you make a new
+// <audio> element for every play — snd_fountain_target plays 20 times
+// in under a second.)  .wav / .mp3 so every phone can play them.
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContextClass();
+
+// iPhones: keep playing even when the silent switch is on
+if (navigator.audioSession) {
+    navigator.audioSession.type = "playback";
 }
 
-const snd_fountain_target = makeSound("snd_fountain_target.ogg");
-const snd_fountain_make = makeSound("snd_fountain_make.ogg");
-const snd_deep_noise = makeSound("snd_deep_noise.ogg");
+// These hold the loaded sounds (null until loaded), like GameMaker sound assets
+let snd_fountain_target = null;
+let snd_fountain_make = null;
+let snd_deep_noise = null;
 
-// snd_play(): play a copy, so the same sound can overlap itself
-function snd_play(sound) {
-    const copy = sound.cloneNode();
-    copy.volume = SOUND_VOLUME;
-    copy.play().catch(function () {});
+function loadSound(file) {
+    return fetch(ASSETS + "sounds/" + file)
+        .then(function (response) {
+            return response.arrayBuffer();
+        })
+        .then(function (data) {
+            return new Promise(function (resolve, reject) {
+                audioCtx.decodeAudioData(data, resolve, reject);   // callback style = old iPhones too
+            });
+        });
+}
+
+loadSound("snd_fountain_target.wav").then(function (b) { snd_fountain_target = b; });
+loadSound("snd_fountain_make.mp3").then(function (b) { snd_fountain_make = b; });
+loadSound("snd_deep_noise.wav").then(function (b) { snd_deep_noise = b; });
+
+// snd_play(sound) — like GameMaker's: plays once, can overlap itself
+function snd_play(sound, loop) {
+    if (sound === null) return;          // not loaded (yet): skip it
+    const source = audioCtx.createBufferSource();
+    source.buffer = sound;
+    source.loop = loop === true;
+    const gain = audioCtx.createGain();
+    gain.gain.value = SOUND_VOLUME;
+    source.connect(gain);
+    gain.connect(audioCtx.destination);
+    source.start();
+}
+
+// Phones block sound until a tap: call this inside the button tap
+function unlockAudio() {
+    audioCtx.resume();
+    // older iPhones also need a tiny silent sound played during the tap
+    const silent = audioCtx.createBufferSource();
+    silent.buffer = audioCtx.createBuffer(1, 1, 22050);
+    silent.connect(audioCtx.destination);
+    silent.start();
 }
 
 
@@ -407,8 +445,7 @@ function krisDraw() {
             if (k.releasetimer >= 10) {
                 k.ballcon = 3;
                 k.fountainStartedAt = stepCount;
-                snd_deep_noise.loop = true;
-                snd_deep_noise.play().catch(function () {});
+                snd_play(snd_deep_noise, true);     // loops (audio_play_sound(..., true))
             }
         }
 
@@ -611,6 +648,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("enter-dark-world");
     button.addEventListener("click", function () {
         button.disabled = true;
+        unlockAudio();              // this tap is what lets the cutscene's sounds play on phones
         startFountainCutscene();
     });
 

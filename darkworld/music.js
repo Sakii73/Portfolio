@@ -1,38 +1,59 @@
 /* =========================================================
-   music.js — Dark World music, looping forever
+   music.js — Dark World music (loops forever) + mute button
    ---------------------------------------------------------
-   Uses the Web Audio API instead of <audio> because it loops
-   with no gap between the end and the start.
+   Uses the shared sound card from audio.js (load it first).
 
-   Think of it like this:
-     AudioContext = the sound card / mixer
-     buffer       = a sound file loaded into memory
-     source       = one "play" of a buffer
-     gainNode     = the volume knob (0 = muted)
+   Phones won't play sound until you tap THIS page (a tap on
+   the Light World page doesn't count). So if the sound is
+   blocked when you arrive, a "Tap anywhere to enter" screen
+   shows first; your tap starts the music and replays the
+   page's intro from the beginning.
    ========================================================= */
 
-const MUSIC_LOOP = "assets/music/dark-world-loop.ogg";
-const MUSIC_VOLUME = 0.5;                  // 0 to 1
-const MUTE_KEY = "darkworld-music-muted";  // remembers your mute choice
+const MUSIC_OGG = "assets/music/dark-world-loop.ogg";
+const MUSIC_MP3 = "assets/music/dark-world-loop.mp3";   // copy for iPhones (no .ogg support)
+const MUSIC_LENGTH = 168.959854;                       // exact length of the loop, in seconds
+const MUSIC_VOLUME = 0.5;                              // 0 to 1
+const MUTE_KEY = "darkworld-music-muted";              // remembers your mute choice
 
-let audioCtx = null;
-let gainNode = null;
 let muted = false;
 
-// Load a sound file and turn it into a playable buffer
-async function loadBuffer(url) {
-    const response = await fetch(url);
-    const data = await response.arrayBuffer();
-    return await audioCtx.decodeAudioData(data);
+function startMusic() {
+    let file = MUSIC_MP3;
+    if (CAN_PLAY_OGG) file = MUSIC_OGG;
+
+    return loadSound(file).then(function (buffer) {
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;            // repeat forever
+
+        // The .ogg loops perfectly as it is. MP3 files get a tiny bit of
+        // silence added at the start and end, so for the .mp3 copy, find
+        // where the music really starts and loop exactly MUSIC_LENGTH
+        // seconds from there (no gap).
+        let start = 0;
+        if (file === MUSIC_MP3) {
+            start = findMusicStart(buffer);
+            source.loopStart = start;
+            source.loopEnd = Math.min(start + MUSIC_LENGTH, buffer.duration);
+        }
+
+        source.connect(musicGain);
+        source.start(0, start);
+    });
 }
 
-async function startMusic() {
-    const loop = await loadBuffer(MUSIC_LOOP);
-    const loopSource = audioCtx.createBufferSource();
-    loopSource.buffer = loop;
-    loopSource.loop = true;          // repeat forever
-    loopSource.connect(gainNode);
-    loopSource.start();
+// Seconds of silence before the first sound in the file.
+// (The song itself starts making sound 0.83ms in.)
+function findMusicStart(buffer) {
+    const samples = buffer.getChannelData(0);
+    const limit = Math.min(samples.length, buffer.sampleRate);   // only look at the first second
+    for (let i = 0; i < limit; i++) {
+        if (Math.abs(samples[i]) > 0.003) {
+            return Math.max(0, i / buffer.sampleRate - 0.00083);
+        }
+    }
+    return 0;
 }
 
 function loadMuted() {
@@ -60,26 +81,55 @@ function updateButton(button) {
     button.setAttribute("aria-pressed", String(muted));
 }
 
-// Smoothly move the volume knob (avoids a "click" sound)
-function setVolume(value, seconds) {
+// Smoothly turn the music volume knob (avoids a "click" sound)
+function setMusicVolume(value, seconds) {
     const now = audioCtx.currentTime;
-    gainNode.gain.cancelScheduledValues(now);
-    gainNode.gain.setValueAtTime(gainNode.gain.value, now);
-    gainNode.gain.linearRampToValueAtTime(value, now + seconds);
+    musicGain.gain.cancelScheduledValues(now);
+    musicGain.gain.setValueAtTime(musicGain.gain.value, now);
+    musicGain.gain.linearRampToValueAtTime(value, now + seconds);
+}
+
+// Black "tap to enter" screen, only shown when sound is blocked
+function showTapToEnter() {
+    const gate = document.createElement("div");
+    gate.className = "tap-gate";
+    const text = document.createElement("p");
+    text.className = "tap-gate-text";
+    text.textContent = "* Tap anywhere to enter.";
+    gate.appendChild(text);
+    document.body.appendChild(gate);
+
+    function enter() {
+        unlockAudio();                             // starts the music
+        gate.removeEventListener("click", enter);
+        document.removeEventListener("keydown", enter);
+        gate.classList.add("hide");                // fade the black screen away
+
+        // replay the page's intro (name pop-in, fade-ins) from the start
+        if (document.getAnimations) {
+            document.getAnimations().forEach(function (animation) {
+                if (animation.effect && animation.effect.target !== gate) {
+                    animation.currentTime = 0;
+                }
+            });
+        }
+        setTimeout(function () {
+            gate.remove();
+        }, 600);
+    }
+
+    gate.addEventListener("click", enter);
+    document.addEventListener("keydown", enter);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("music-toggle");
 
-    audioCtx = new AudioContext();
-    gainNode = audioCtx.createGain();
-    gainNode.connect(audioCtx.destination);
-
     muted = loadMuted();
     if (muted) {
-        gainNode.gain.value = 0;
+        musicGain.gain.value = 0;
     } else {
-        gainNode.gain.value = MUSIC_VOLUME;
+        musicGain.gain.value = MUSIC_VOLUME;
     }
     updateButton(button);
 
@@ -87,38 +137,32 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Dark World music could not load:", error);
     });
 
-    // Browsers may block sound until you click something on the page.
-    // If that happened, the first click/key press starts it.
-    function unlockAudio() {
-        if (audioCtx.state === "suspended") {
-            audioCtx.resume();
-        }
-    }
-    document.addEventListener("click", unlockAudio);
-    document.addEventListener("keydown", unlockAudio);
-    document.addEventListener("touchstart", unlockAudio);
+    // Give the browser a moment; if sound is still blocked, ask for a tap
+    setTimeout(function () {
+        if (audioIsBlocked()) showTapToEnter();
+    }, 250);
 
     button.addEventListener("click", function () {
-        // If the sound was still blocked, this click just starts it
-        if (audioCtx.state === "suspended") {
-            audioCtx.resume();
+        // If sound was still blocked, this tap just starts it
+        if (audioIsBlocked()) {
+            unlockAudio();
             return;
         }
         muted = !muted;
         saveMuted(muted);
         if (muted) {
-            setVolume(0, 0.2);
+            setMusicVolume(0, 0.2);
         } else {
-            setVolume(MUSIC_VOLUME, 0.2);
+            setMusicVolume(MUSIC_VOLUME, 0.2);
         }
         updateButton(button);
     });
 
-    // Going back to the Light World: fade the music out with the white flash
+    // Going back to the Light World: fade the music out with the white light
     const returnButton = document.getElementById("return-to-light");
     if (returnButton !== null) {
         returnButton.addEventListener("click", function () {
-            setVolume(0, 0.45);
+            setMusicVolume(0, 0.45);
         });
     }
 });

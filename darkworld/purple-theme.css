@@ -17,16 +17,33 @@ html {
 /* 2. Page background: black + TWO grids of squares crossing each other
       - purple 48px squares drifting toward the TOP-LEFT
       - pink-magenta 72px squares drifting toward the BOTTOM-RIGHT
-      Each grid = 2 gradients (horizontal lines + vertical lines). */
+      Each grid = 2 gradients (horizontal lines + vertical lines).
+      The grid lives on its own layer (body::before) so it can stay
+      hidden until the name intro is done, then fade in at 3.5s with
+      the rest of the page. */
 html body {
     background-color: #07000f !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;                 /* behind all the page content */
+    pointer-events: none;
     background-image:
         linear-gradient(rgba(180, 77, 255, 0.12) 2px, transparent 2px),          /* purple: horizontal lines */
         linear-gradient(90deg, rgba(180, 77, 255, 0.12) 2px, transparent 2px),   /* purple: vertical lines */
         linear-gradient(rgba(255, 90, 210, 0.08) 2px, transparent 2px),          /* pink: horizontal lines */
         linear-gradient(90deg, rgba(255, 90, 210, 0.08) 2px, transparent 2px);   /* pink: vertical lines */
     background-size: 48px 48px, 48px 48px, 72px 72px, 72px 72px;
-    animation: dw-grid-scroll 3s linear infinite;   /* lower = faster */
+    opacity: 0;
+    animation:
+        dw-grid-scroll 3s linear infinite,            /* lower = faster */
+        dw-grid-appear 0.8s ease-out 3.5s forwards;   /* fade in after the intro */
 }
 
 /* Each grid moves exactly one square per loop, so the loop is seamless.
@@ -34,6 +51,11 @@ html body {
 @keyframes dw-grid-scroll {
     from { background-position: 0 0, 0 0, 0 0, 0 0; }
     to   { background-position: -48px -48px, -48px -48px, 72px 72px, 72px 72px; }
+}
+
+@keyframes dw-grid-appear {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* 3. Nav bar: glowing purple bottom edge, and it sticks to the top
@@ -44,6 +66,31 @@ nav {
     box-shadow: 0 2px 0 #b44dff, 0 0 18px rgba(180, 77, 255, 0.6);
 }
 
+/* Center the nav links. The original page squeezed them into a
+   672px box (they're wider, so they spilled out to the right) and
+   kept 96px of empty space on phones for the flags we removed.
+   Now: centered, even spacing, and on narrow phones they wrap
+   onto a second centered row instead of going off-screen. */
+nav ul {
+    max-width: none !important;
+    height: auto !important;
+    min-height: 48px;
+    flex-wrap: wrap;
+    justify-content: center !important;
+    gap: 6px 28px !important;          /* row gap, column gap */
+    padding: 8px 12px !important;
+}
+
+@media (max-width: 600px) {
+    nav ul {
+        gap: 6px 12px !important;
+    }
+    nav ul li a {
+        font-size: 10px !important;    /* keeps it to 2 rows on small phones */
+        padding: 0 4px !important;
+    }
+}
+
 /* nav links scroll smoothly, and stop just below the sticky nav */
 html {
     scroll-behavior: smooth;
@@ -51,6 +98,12 @@ html {
 
 #ch5_intro, #home, #languages, #projects, #tools, #education, #contact {
     scroll-margin-top: 56px;
+}
+
+@media (max-width: 600px) {
+    #ch5_intro, #home, #languages, #projects, #tools, #education, #contact {
+        scroll-margin-top: 90px;       /* the nav is 2 rows tall on phones */
+    }
 }
 
 /* 4. "About Me" section: blue gradient -> purple fading to black */
@@ -101,7 +154,8 @@ html .sepia-box {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    html body {
+    body::before {
         animation: none;
+        opacity: 1;
     }
 }

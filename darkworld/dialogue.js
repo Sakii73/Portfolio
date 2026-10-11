@@ -70,9 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
     shade.appendChild(box);
     document.body.appendChild(shade);
 
-    const blip = new Audio(TEXT_SOUND);
-    blip.preload = "auto";
-    blip.volume = TEXT_VOLUME;
+    // text blip, loaded once through audio.js (load it before this file)
+    let blip = null;
+    let lastBlip = null;
+    loadSound(TEXT_SOUND).then(function (buffer) {
+        blip = buffer;
+    }).catch(function () {
+        // no blip sound: the text still types, just silently
+    });
 
     let pages = [];
     let page = 0;
@@ -82,8 +87,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let openedBy = null;
 
     function playBlip() {
-        blip.currentTime = 0;          // restart it, like the game does
-        blip.play().catch(function () {});
+        if (blip === null) return;
+        // stop the previous blip and start a new one, like the game does
+        if (lastBlip !== null) {
+            try { lastBlip.stop(); } catch (error) { /* already finished */ }
+        }
+        lastBlip = playSound(blip, TEXT_VOLUME);
     }
 
     function showLetters(line, count) {
@@ -135,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isOpen) return;
         isOpen = true;
         openedBy = trigger;
+        unlockAudio();                    // this tap also lets the blips play
         shade.classList.add("show");      // must be visible before measuring
 
         pages = [];
