@@ -96,12 +96,12 @@ html {
     scroll-behavior: smooth;
 }
 
-#ch5_intro, #home, #languages, #projects, #tools, #education, #contact {
+#ch5_intro, #home, #skills, #languages, #projects, #tools, #education, #contact {
     scroll-margin-top: 56px;
 }
 
 @media (max-width: 600px) {
-    #ch5_intro, #home, #languages, #projects, #tools, #education, #contact {
+    #ch5_intro, #home, #skills, #languages, #projects, #tools, #education, #contact {
         scroll-margin-top: 90px;       /* the nav is 2 rows tall on phones */
     }
 }

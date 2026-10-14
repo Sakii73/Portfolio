@@ -269,3 +269,11 @@
     border: 2px solid #b44dff !important;
     border-radius: 6px;
 }
+
+
+/* phones: the email is too long for the screen at 16px */
+@media (max-width: 480px) {
+    .dw-footer a {
+        font-size: 11px;
+    }
+}

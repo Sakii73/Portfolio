@@ -1,8 +1,19 @@
 /* =========================================================
-   dialogue.css — the Undertale-style dialogue box
-   (!important on margin/padding/border/colors for buttons:
-   the site's base CSS resets those on every element)
+   dialogue.css — Deltarune Dark World text box + save point
+   ---------------------------------------------------------
+   Frame colors sampled from the Dark World text box sprite:
+     white #FFFFFF  ->  thin grey-blue #9DA2C4  ->  black
+   (at 2x size: 4px / 2px). Font: Pixel Operator
+   (formerly 8bitoperator JVE, CC0 license), which is sharpest
+   at 16px or 32px.
+   !important on margin/padding/border/colors: the site's reset.
    ========================================================= */
+
+@font-face {
+    font-family: 'PixelOperator';
+    src: url('assets/fonts/PixelOperator.ttf') format('truetype');
+    font-display: swap;
+}
 
 /* full-screen layer behind the box (dims the page a little) */
 .ut-shade {
@@ -20,18 +31,35 @@
     display: block;
 }
 
-/* the black box with the thick white border, at the bottom */
+/* the Dark World box, at the bottom of the screen */
 .ut-box {
     position: absolute;
     left: 50%;
     bottom: 32px;
     transform: translateX(-50%);
-    width: min(92vw, 680px);
-    padding: 22px 24px 14px !important;
+    width: min(92vw, 720px);
+    padding: 24px 28px 14px !important;
     background-color: #000;
-    border: 6px solid #ffffff !important;
+    border: 0 !important;
+    box-shadow: inset 0 0 0 4px #FFFFFF,                   /* white line */
+                inset 0 0 0 6px #9DA2C4;                   /* thin grey-blue line */
     cursor: pointer;
 }
+
+/* little sparkles on the 4 corners (dialogue.js adds them) */
+.dw-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: url("assets/box-corner.png") center / 14px 14px no-repeat;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.dw-corner.tl { top: -5px; left: -5px; }
+.dw-corner.tr { top: -5px; right: -5px; }
+.dw-corner.bl { bottom: -5px; left: -5px; }
+.dw-corner.br { bottom: -5px; right: -5px; }
 
 .ut-row {
     display: flex;
@@ -39,7 +67,7 @@
     gap: 22px;
 }
 
-/* your face */
+/* your face (hidden for the save point, which has no speaker) */
 .ut-face {
     width: 96px;
     height: 96px;
@@ -48,52 +76,61 @@
     image-rendering: pixelated;   /* keeps the pixel art sharp */
 }
 
+.ut-face.none {
+    display: none !important;     /* !important: the site's reset sets display on every img */
+}
+
 /* the text area is exactly 3 lines tall; anything more goes to the next page */
 .ut-text {
     flex: 1;
-    height: 6em;                  /* 3 lines x line-height 2 */
+    height: 3.75em;               /* 3 lines x line-height 1.25 */
     overflow: hidden;
     margin: 0 !important;
-    font-family: 'Press Start 2P', monospace !important;
-    font-size: 16px;
-    line-height: 2;
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 32px;
+    line-height: 1.25;
     color: #ffffff;
     white-space: pre-wrap;
+    -webkit-font-smoothing: none;
 }
 
 .ut-hidden {
     visibility: hidden;
 }
 
-/* OK button, bottom right, like a menu option */
+/* OK button / save point choices, bottom of the box */
 .ut-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px !important;
+    flex-wrap: wrap;
+    gap: 4px 44px;
+    margin-top: 6px !important;
 }
 
-.ut-ok {
-    padding: 6px 12px !important;
-    font-family: 'Press Start 2P', monospace !important;
-    font-size: 16px !important;
+.ut-actions.choices {
+    justify-content: center;
+}
+
+/* every option gets the SOUL heart from soul.css (class soul-option) */
+.ut-ok,
+.ut-choice {
+    padding: 4px 8px !important;
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 32px !important;
+    line-height: 1.1 !important;
     color: #ffffff !important;
     background-color: transparent !important;
     border: 0 !important;
     cursor: pointer;
+    -webkit-font-smoothing: none;
 }
 
-/* hovered / selected = yellow with a red heart, like choosing an option in the game */
 .ut-ok:hover,
-.ut-ok:focus-visible {
-    color: #F9FF10 !important;
+.ut-ok:focus-visible,
+.ut-choice:hover,
+.ut-choice:focus-visible {
+    color: #FFFF00 !important;
     outline: none;
-}
-
-.ut-ok:hover::before,
-.ut-ok:focus-visible::before {
-    content: "\2665";             /* heart */
-    margin-right: 10px;
-    color: #ff0000;
 }
 
 /* the things you click to open it */
@@ -102,13 +139,57 @@
     cursor: pointer;
 }
 
-/* phones: smaller face + text */
+
+/* ---------- SAVE POINT (contact footer) ---------- */
+.save-point {
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin: 12px auto 10px !important;
+    padding: 0 !important;
+    background: url("assets/save-point.png") 0 0 / 96px 48px no-repeat !important;
+    border: 0 !important;
+    image-rendering: pixelated;
+    cursor: pointer;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 0, 0.6));
+    animation: save-twinkle 0.9s steps(1) infinite;
+}
+
+.save-point:hover,
+.save-point:focus-visible {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 0, 0.95));
+    outline: none;
+}
+
+/* 2-frame twinkle: big star / small star */
+@keyframes save-twinkle {
+    0%   { background-position: 0 0; }
+    50%  { background-position: -48px 0; }
+}
+
+.dw-footer .save-hint {
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+
+/* ---------- phones ---------- */
 @media (max-width: 600px) {
     .ut-box {
         bottom: 16px;
-        padding: 14px 14px 10px !important;
-        border-width: 4px !important;
+        padding: 14px 14px 8px !important;
+        box-shadow: inset 0 0 0 2px #FFFFFF, inset 0 0 0 3px #9DA2C4;
     }
+    .dw-corner {
+        width: 7px;
+        height: 7px;
+        background-size: 7px 7px;
+    }
+    .dw-corner.tl { top: -2px; left: -2px; }
+    .dw-corner.tr { top: -2px; right: -2px; }
+    .dw-corner.bl { bottom: -2px; left: -2px; }
+    .dw-corner.br { bottom: -2px; right: -2px; }
     .ut-row {
         gap: 12px;
     }
@@ -117,7 +198,17 @@
         height: 64px;
     }
     .ut-text,
-    .ut-ok {
-        font-size: 11px !important;
+    .ut-ok,
+    .ut-choice {
+        font-size: 16px !important;
+    }
+    .ut-actions {
+        gap: 4px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .save-point {
+        animation: none;
     }
 }

@@ -38,6 +38,14 @@
     <link rel="stylesheet" href="dialogue.css">
     <script src="dialogue.js"></script>
 
+    <!-- SOUL heart cursor + menu sounds -->
+    <link rel="stylesheet" href="soul.css">
+    <script src="soul.js"></script>
+
+    <!-- Battle HUD look: Skills party panels + TP meter -->
+    <link rel="stylesheet" href="hud.css">
+    <script src="hud.js"></script>
+
     <style>
         @font-face {
             font-family: 'Monster Friend Fore Web';
@@ -186,7 +194,7 @@
                 </li>
                 <li>
                     <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
-                        href="#home">Skills</a>
+                        href="#skills">Skills</a>
                 </li>
                 <li>
                     <a class="px-2 transition-opacity text-white hover:opacity-80 hover:duration-0 duration-150 inline-block text-center text-xs sm:text-sm md:text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0)]"
@@ -210,6 +218,13 @@
 
     <!-- MUSIC on/off (music.js) -->
     <button id="music-toggle" class="music-toggle" type="button" aria-pressed="false">Music: On</button>
+
+    <!-- TP meter = how far down the page you are (hud.js) -->
+    <div id="tp-meter" class="tp-meter" aria-hidden="true">
+        <span class="tp-label">TP</span>
+        <div class="tp-frame"><div class="tp-bar"><div class="tp-fill"></div></div></div>
+        <span class="tp-value">0%</span>
+    </div>
 
 
     <main>
@@ -451,6 +466,84 @@
                 </div>
             </section>
 
+
+            <!-- SKILLS: Deltarune battle-style party panels (hud.css / hud.js)
+                 data-lv = the level, 0 to 10. Change the numbers in BOTH
+                 data-lv="..." and the "../ 10" text to your own levels. -->
+            <section id="skills" class="lang-section">
+                <h2 class="lang-title">Skills</h2>
+                <p class="party-note">* Your party. LV = how comfortable I am with each area.</p>
+                <ul class="party">
+                    <li class="party-member" style="--member: #00FFFF" data-lv="7">
+                        <div class="pm-top">
+                            <span class="pm-name">Backend</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">7/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="Java"><img src="assets/icons/java-original.svg" alt="Java"></li>
+                            <li title="PHP"><img src="assets/icons/php-original.svg" alt="PHP"></li>
+                            <li title="Python"><img src="assets/icons/python-original.svg" alt="Python"></li>
+                        </ul>
+                    </li>
+                    <li class="party-member" style="--member: #FF00FF" data-lv="7">
+                        <div class="pm-top">
+                            <span class="pm-name">Database</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">7/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="MySQL"><img src="assets/icons/mysql-original.svg" alt="MySQL"></li>
+                            <li title="SQL"><span class="pm-text">SQL</span></li>
+                        </ul>
+                    </li>
+                    <li class="party-member" style="--member: #00FF00" data-lv="7">
+                        <div class="pm-top">
+                            <span class="pm-name">Web</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">7/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="HTML"><img src="assets/icons/html5-original.svg" alt="HTML"></li>
+                            <li title="CSS"><img src="assets/icons/css3-original.svg" alt="CSS"></li>
+                            <li title="JavaScript"><img src="assets/icons/javascript-original.svg" alt="JavaScript"></li>
+                            <li title="AJAX"><span class="pm-text">AJ</span></li>
+                        </ul>
+                    </li>
+                    <li class="party-member" style="--member: #FFFF00" data-lv="7">
+                        <div class="pm-top">
+                            <span class="pm-name">Game Dev</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">7/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="GML"><span class="pm-text">GML</span></li>
+                            <li title="C#"><img src="assets/icons/csharp-original.svg" alt="C#"></li>
+                        </ul>
+                    </li>
+                    <li class="party-member" style="--member: #FF8AD8" data-lv="4">
+                        <div class="pm-top">
+                            <span class="pm-name">Mobile</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">4/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="Dart"><img src="assets/icons/dart-original.svg" alt="Dart"></li>
+                        </ul>
+                    </li>
+                    <li class="party-member" style="--member: #B44DFF" data-lv="2">
+                        <div class="pm-top">
+                            <span class="pm-name">AI / ML</span>
+                            <span class="pm-hp-label">LV</span>
+                            <div class="pm-hp"><span class="pm-numbers">2/ 10</span><div class="pm-bar"><div class="pm-fill"></div></div></div>
+                        </div>
+                        <ul class="pm-commands">
+                            <li title="Python"><img src="assets/icons/python-original.svg" alt="Python"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
             <!-- LANGUAGES (styles in my-sections.css) -->
             <section id="languages" class="lang-section">
                 <h2 class="lang-title">Languages</h2>
@@ -542,6 +635,9 @@
     <!-- FOOTER: contact (styles in my-sections.css) -->
     <footer id="contact" class="dw-footer">
         <p class="dw-footer-title">Contact</p>
+        <!-- SAVE POINT: click it for the contact menu (dialogue.js) -->
+        <button id="save-point" class="save-point" type="button" aria-label="Save point: contact options"></button>
+        <p class="save-hint">* (A save point. Touch it.)</p>
         <p><a href="mailto:justin.era73@gmail.com">justin.era73@gmail.com</a></p>
         <p class="dw-footer-copy">&copy; 2026 Justin Era Antonio. All rights reserved.</p>
     </footer>

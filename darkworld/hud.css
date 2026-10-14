@@ -1,0 +1,236 @@
+/* =========================================================
+   hud.css — Deltarune battle-HUD look
+   1. Skills = party panels (name, LV numbers + bar, command row)
+   2. TP meter on the left = how far down the page you've scrolled
+   Colors are sampled from the Deltarune HUD sprite sheet.
+   !important on padding / margin / border: the site's reset.
+   ========================================================= */
+
+@font-face {
+    font-family: 'PixelOperator';
+    src: url('assets/fonts/PixelOperator.ttf') format('truetype');
+    font-display: swap;
+}
+
+/* ---------- 1. PARTY PANELS ---------- */
+.party-note {
+    margin: 0 0 20px !important;
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.party {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 0 !important;
+    padding: 8px 0 0 !important;
+    list-style: none;
+    text-align: left;
+}
+
+/* one panel. --member = this member's color (set in the HTML) */
+.party-member {
+    --member: #ffffff;
+    padding: 8px 10px 10px !important;
+    background-color: #000;
+    border: 2px solid #333333 !important;     /* not this member's "turn" yet */
+    transition: transform 0.12s steps(2), border-color 0.12s;
+}
+
+/* hovered / tapped = its turn: colored border, panel pops up */
+.party-member:hover,
+.party-member:focus-within {
+    border-color: var(--member) !important;
+    transform: translateY(-6px);
+}
+
+/* phones have no hover, so show every panel in its color */
+@media (hover: none) {
+    .party-member {
+        border-color: var(--member) !important;
+    }
+}
+
+.pm-top {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin: 0 0 10px !important;
+}
+
+.pm-name {
+    flex: 1;
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    line-height: 1;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.pm-hp-label {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 8px;
+    line-height: 1;
+    color: #ffffff;
+}
+
+.pm-hp {
+    width: 76px;
+    text-align: right;
+}
+
+.pm-numbers {
+    display: block;
+    margin: 0 0 2px !important;
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    line-height: 1;
+    color: #ffffff;
+}
+
+/* the LV bar (looks like the game's HP bar): dark red = the missing part */
+.pm-bar {
+    height: 8px;
+    background-color: #800000;
+}
+
+.pm-fill {
+    width: 0;                      /* hud.js fills it when you scroll here */
+    height: 100%;
+    background-color: var(--member);
+    transition: width 0.9s steps(12);
+}
+
+/* command row (tech used), like FIGHT / ACT / ITEM / SPARE / DEFEND */
+.pm-commands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+
+.pm-commands li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #000;
+    border: 2px solid #FF7F27 !important;     /* Deltarune command orange */
+    cursor: default;
+}
+
+.pm-commands li:hover {
+    border-color: #FFFF00 !important;         /* selected command = yellow */
+}
+
+/* icons are orange like the game's buttons; real colors on hover */
+.pm-commands img {
+    width: 20px;
+    height: 20px;
+    filter: grayscale(1) brightness(1.5) sepia(1) saturate(6) hue-rotate(-12deg);
+}
+
+.pm-commands li:hover img {
+    filter: none;
+}
+
+/* languages without an icon file (GML, SQL, AJAX) */
+.pm-text {
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    line-height: 1;
+    color: #FF7F27;
+}
+
+.pm-commands li:hover .pm-text {
+    color: #FFFF00;
+}
+
+
+/* ---------- 2. TP METER (scroll progress) ---------- */
+.tp-meter {
+    position: fixed;
+    left: 18px;
+    top: 50%;
+    z-index: 80;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    animation: ui-appear 0.6s ease-out 3.5s both;   /* after the name intro */
+}
+
+.tp-label {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 14px;
+    color: #FFA040;
+    transform: skewX(-12deg);
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* slanted bar: the outer piece is the orange outline,
+   the inner piece is the black inside with the fill */
+.tp-frame {
+    width: 26px;
+    height: 200px;
+    padding: 2px !important;
+    background-color: #FF7F27;
+    clip-path: polygon(0 12px, 100% 0, 100% calc(100% - 12px), 0 100%);
+}
+
+.tp-bar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    clip-path: polygon(0 11px, 100% 0, 100% calc(100% - 11px), 0 100%);
+}
+
+.tp-fill {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    background-color: #FFA040;     /* TP orange */
+}
+
+.tp-value {
+    font-family: 'PixelOperator', monospace !important;
+    font-size: 16px;
+    color: #ffffff;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* 100% = MAX in yellow, like the game */
+.tp-meter.max .tp-fill {
+    background-color: #FFFF00;
+}
+
+.tp-meter.max .tp-value {
+    color: #FFFF00;
+}
+
+/* only where there's room beside the content */
+@media (max-width: 900px) {
+    .tp-meter {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tp-meter {
+        animation: none;
+    }
+    .pm-fill {
+        transition: none;
+    }
+}

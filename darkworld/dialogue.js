@@ -1,34 +1,47 @@
 /* =========================================================
-   dialogue.js — Undertale-style dialogue box with your face
+   dialogue.js — Deltarune Dark World text box
    ---------------------------------------------------------
-   Click the Undertale Sepia box, its GameJolt picture, or its
-   project card -> a text box opens with your portrait as the
-   face, typing each line with a text blip per letter.
+   Two things open it:
+   1. Undertale Sepia (project card, GameJolt picture): your face
+      + "link coming soon" lines, then OK.
+   2. The save point star in the Contact footer: narration
+      (no face), then choices: Email / Copy / Return.
 
-   If a line doesn't fit in the box, it's split automatically:
-   the box clears and the rest continues on the next page.
+   Each line types out with a blip per letter. If a line doesn't
+   fit in the box, it's split automatically onto the next page.
 
      OK / click the box / Enter / Z = finish typing, next page, or close
+     Left / Right                   = move between choices
      Esc                            = close
    ========================================================= */
 
-// What the box says. Each "* ..." is one message; long ones are
-// split into extra pages automatically.
-const DIALOGUE = [
+const EMAIL = "justin.era73@gmail.com";
+
+// Undertale Sepia
+const SEPIA_LINES = [
     "* The GameJolt link for Undertale Sepia is coming soon.",
     "* It'll be published soon! Stay determined."
 ];
+
+// Save point (contact)
+const SAVE_LINES = [
+    "* (You reached the end of the portfolio.)",
+    "* (The thought of working together fills you with determination.)"
+];
+
 const FACE_IMAGE = "assets/portrait.png";
 const TEXT_SOUND = "assets/sounds/snd_text.wav";
+const SAVE_SOUND = "assets/sounds/snd_save.wav";
 const TEXT_VOLUME = 0.5;
+const SAVE_VOLUME = 0.6;
 const TYPE_SPEED = 35;       // ms per letter
 
 document.addEventListener("DOMContentLoaded", function () {
     // ---- Build the box ----
     // <div class="ut-shade">
-    //   <div class="ut-box">
+    //   <div class="ut-box">  (+ 4 corner sparkles)
     //     <div class="ut-row"> <img class="ut-face"> <p class="ut-text">...</p> </div>
-    //     <div class="ut-actions"> <button class="ut-ok">OK</button> </div>
+    //     <div class="ut-actions"> OK button, or the save point choices </div>
     //   </div>
     // </div>
     const shade = document.createElement("div");
@@ -38,6 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
     box.className = "ut-box";
     box.setAttribute("role", "dialog");
     box.setAttribute("aria-live", "polite");
+
+    ["tl", "tr", "bl", "br"].forEach(function (corner) {
+        const sparkle = document.createElement("span");
+        sparkle.className = "dw-corner " + corner;
+        box.appendChild(sparkle);
+    });
 
     const row = document.createElement("div");
     row.className = "ut-row";
@@ -57,11 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const actions = document.createElement("div");
     actions.className = "ut-actions";
-    const okButton = document.createElement("button");
-    okButton.className = "ut-ok";
-    okButton.type = "button";
-    okButton.textContent = "OK";
-    actions.appendChild(okButton);
+    const okButton = makeButton("OK", "ut-ok");
 
     row.appendChild(face);
     row.appendChild(text);
@@ -70,17 +85,29 @@ document.addEventListener("DOMContentLoaded", function () {
     shade.appendChild(box);
     document.body.appendChild(shade);
 
-    // text blip, loaded once through audio.js (load it before this file)
+    function makeButton(label, className) {
+        const button = document.createElement("button");
+        button.className = className + " soul-option";   // soul-option = heart cursor (soul.css)
+        button.type = "button";
+        button.textContent = label;
+        return button;
+    }
+
+    // sounds, loaded once through audio.js (load it before this file)
     let blip = null;
     let lastBlip = null;
+    let saveSound = null;
     loadSound(TEXT_SOUND).then(function (buffer) {
         blip = buffer;
-    }).catch(function () {
-        // no blip sound: the text still types, just silently
-    });
+    }).catch(function () { /* no blip: the text still types, just silently */ });
+    loadSound(SAVE_SOUND).then(function (buffer) {
+        saveSound = buffer;
+    }).catch(function () { /* same */ });
 
     let pages = [];
     let page = 0;
+    let choices = null;       // null = just an OK button at the end
+    let choiceButtons = [];
     let isOpen = false;
     let typing = false;
     let timer = null;
@@ -122,38 +149,78 @@ document.addEventListener("DOMContentLoaded", function () {
         return result;
     }
 
+    // Bottom of the box: OK while reading, the choices on the last page
+    function showButtons() {
+        actions.innerHTML = "";
+        actions.classList.remove("choices");
+        choiceButtons = [];
+        const lastPage = page === pages.length - 1;
+
+        if (choices !== null && lastPage && !typing) {
+            actions.classList.add("choices");
+            choices.forEach(function (choice) {
+                const button = makeButton(choice.label, "ut-choice");
+                button.addEventListener("click", function (event) {
+                    event.stopPropagation();       // don't also count as "click the box"
+                    choice.action();
+                });
+                actions.appendChild(button);
+                choiceButtons.push(button);
+            });
+            choiceButtons[0].focus();
+        } else {
+            actions.appendChild(okButton);
+            okButton.focus();
+        }
+    }
+
+    function finishTyping() {
+        clearInterval(timer);
+        typing = false;
+        showLetters(pages[page], pages[page].length);
+        showButtons();
+    }
+
     function typePage() {
         const line = pages[page];
         let count = 0;
         typing = true;
         showLetters(line, 0);
+        showButtons();
 
         timer = setInterval(function () {
             count++;
             showLetters(line, count);
             const letter = line.charAt(count - 1);
             if (letter !== " " && letter !== "*") playBlip();
-            if (count >= line.length) {
-                clearInterval(timer);
-                typing = false;
-            }
+            if (count >= line.length) finishTyping();
         }, TYPE_SPEED);
     }
 
-    function openDialogue(trigger) {
-        if (isOpen) return;
-        isOpen = true;
-        openedBy = trigger;
-        unlockAudio();                    // this tap also lets the blips play
-        shade.classList.add("show");      // must be visible before measuring
-
+    // Start (or restart) the box with new lines
+    function say(lines, newChoices) {
+        clearInterval(timer);
+        choices = newChoices;
         pages = [];
-        DIALOGUE.forEach(function (message) {
+        lines.forEach(function (message) {
             pages = pages.concat(splitIntoPages(message));
         });
         page = 0;
         typePage();
-        okButton.focus();
+    }
+
+    function openDialogue(trigger, lines, showFace, newChoices) {
+        if (isOpen) return;
+        isOpen = true;
+        openedBy = trigger;
+        unlockAudio();                    // this tap also lets the blips play
+        if (showFace) {
+            face.classList.remove("none");
+        } else {
+            face.classList.add("none");
+        }
+        shade.classList.add("show");      // must be visible before measuring
+        say(lines, newChoices);
     }
 
     function closeDialogue() {
@@ -168,11 +235,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function advance() {
         if (!isOpen) return;
         if (typing) {
-            clearInterval(timer);
-            typing = false;
-            showLetters(pages[page], pages[page].length);
+            finishTyping();
             return;
         }
+        if (choiceButtons.length > 0) return;   // waiting for a choice
         page++;
         if (page < pages.length) {
             typePage();
@@ -189,28 +255,99 @@ document.addEventListener("DOMContentLoaded", function () {
             closeDialogue();
             return;
         }
-        // Enter on the focused OK button already "clicks" it, so skip it here
-        if (event.key === "Enter" && document.activeElement === okButton) return;
-        if (event.key === "Enter" || event.key === "z" || event.key === "Z") {
+
+        // Left / Right moves the heart between choices
+        const index = choiceButtons.indexOf(document.activeElement);
+        if (choiceButtons.length > 0 && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
             event.preventDefault();
-            advance();
+            let next = index + 1;
+            if (event.key === "ArrowLeft") next = index - 1;
+            if (next < 0) next = choiceButtons.length - 1;
+            if (next >= choiceButtons.length) next = 0;
+            choiceButtons[next].focus();
+            return;
+        }
+
+        // Enter on a focused button already "clicks" it, so skip it here
+        if (event.key === "Enter" && document.activeElement.tagName === "BUTTON") return;
+        if (event.key === "z" || event.key === "Z" || event.key === "Enter") {
+            event.preventDefault();
+            if (index >= 0) {
+                choiceButtons[index].click();   // Z picks the highlighted choice
+            } else {
+                advance();
+            }
         }
     });
 
-    // ---- Everything that opens the box ----
-    const triggers = document.querySelectorAll(".sepia-box, #ch5_trailer img, .sepia-trigger");
-    triggers.forEach(function (trigger) {
-        trigger.setAttribute("role", "button");
-        trigger.setAttribute("tabindex", "0");      // reachable with the Tab key
-        trigger.addEventListener("click", function (event) {
-            event.preventDefault();
-            openDialogue(trigger);
-        });
-        trigger.addEventListener("keydown", function (event) {
-            if (event.key === "Enter" && !isOpen) {
-                event.preventDefault();
-                openDialogue(trigger);
-            }
+    // ---- 1. Undertale Sepia ----
+    const sepiaTriggers = document.querySelectorAll(".sepia-box, #ch5_trailer img, .sepia-trigger");
+    sepiaTriggers.forEach(function (trigger) {
+        makeClickable(trigger, function () {
+            openDialogue(trigger, SEPIA_LINES, true, null);
         });
     });
+
+    // ---- 2. Save point ----
+    const savePoint = document.getElementById("save-point");
+    if (savePoint !== null) {
+        const saveChoices = [
+            {
+                label: "Email",
+                action: function () {
+                    closeDialogue();
+                    window.location.href = "mailto:" + EMAIL;
+                }
+            },
+            {
+                label: "Copy",
+                action: function () {
+                    copyEmail();
+                }
+            },
+            {
+                label: "Return",
+                action: function () {
+                    closeDialogue();
+                }
+            }
+        ];
+        makeClickable(savePoint, function () {
+            openDialogue(savePoint, SAVE_LINES, false, saveChoices);
+        });
+    }
+
+    // "Copy": put the email on the clipboard, play the save sound
+    function copyEmail() {
+        function done() {
+            if (saveSound !== null) playSound(saveSound, SAVE_VOLUME);
+            say(["* (" + EMAIL + " was saved to your clipboard.)"], null);
+        }
+        function failed() {
+            say(["* (Couldn't copy it. The email is " + EMAIL + ")"], null);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(EMAIL).then(done, failed);
+        } else {
+            failed();
+        }
+    }
+
+    // click, or Enter when focused with Tab
+    function makeClickable(element, open) {
+        if (element.tagName !== "BUTTON") {
+            element.setAttribute("role", "button");
+            element.setAttribute("tabindex", "0");
+        }
+        element.addEventListener("click", function (event) {
+            event.preventDefault();
+            open();
+        });
+        element.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !isOpen) {
+                event.preventDefault();
+                open();
+            }
+        });
+    }
 });
