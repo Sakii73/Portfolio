@@ -1,29 +1,10 @@
-/* =========================================================
-   dialogue.js — Deltarune Dark World text box
-   ---------------------------------------------------------
-   Two things open it:
-   1. Undertale Sepia (project card, GameJolt picture): your face
-      + "link coming soon" lines, then OK.
-   2. The save point star in the Contact footer: narration
-      (no face), then choices: Email / Copy / Return.
-
-   Each line types out with a blip per letter. If a line doesn't
-   fit in the box, it's split automatically onto the next page.
-
-     OK / click the box / Enter / Z = finish typing, next page, or close
-     Left / Right                   = move between choices
-     Esc                            = close
-   ========================================================= */
-
 const EMAIL = "justin.era73@gmail.com";
 
-// Undertale Sepia
 const SEPIA_LINES = [
     "* The GameJolt link for Undertale Sepia is coming soon.",
     "* It'll be published soon! Stay determined."
 ];
 
-// Save point (contact)
 const SAVE_LINES = [
     "* (You reached the end of the portfolio.)",
     "* (The thought of working together fills you with determination.)"
@@ -34,16 +15,9 @@ const TEXT_SOUND = "assets/sounds/snd_text.wav";
 const SAVE_SOUND = "assets/sounds/snd_save.wav";
 const TEXT_VOLUME = 0.5;
 const SAVE_VOLUME = 0.6;
-const TYPE_SPEED = 35;       // ms per letter
+const TYPE_SPEED = 35;
 
 document.addEventListener("DOMContentLoaded", function () {
-    // ---- Build the box ----
-    // <div class="ut-shade">
-    //   <div class="ut-box">  (+ 4 corner sparkles)
-    //     <div class="ut-row"> <img class="ut-face"> <p class="ut-text">...</p> </div>
-    //     <div class="ut-actions"> OK button, or the save point choices </div>
-    //   </div>
-    // </div>
     const shade = document.createElement("div");
     shade.className = "ut-shade";
 
@@ -70,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     text.className = "ut-text";
     const typedPart = document.createElement("span");
     const hiddenPart = document.createElement("span");
-    hiddenPart.className = "ut-hidden";   // invisible rest of the line, so words don't jump while typing
+    hiddenPart.className = "ut-hidden";
     text.appendChild(typedPart);
     text.appendChild(hiddenPart);
 
@@ -87,26 +61,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function makeButton(label, className) {
         const button = document.createElement("button");
-        button.className = className + " soul-option";   // soul-option = heart cursor (soul.css)
+        button.className = className + " soul-option";
         button.type = "button";
         button.textContent = label;
         return button;
     }
 
-    // sounds, loaded once through audio.js (load it before this file)
     let blip = null;
     let lastBlip = null;
     let saveSound = null;
     loadSound(TEXT_SOUND).then(function (buffer) {
         blip = buffer;
-    }).catch(function () { /* no blip: the text still types, just silently */ });
+    }).catch(function () { });
     loadSound(SAVE_SOUND).then(function (buffer) {
         saveSound = buffer;
-    }).catch(function () { /* same */ });
+    }).catch(function () { });
 
     let pages = [];
     let page = 0;
-    let choices = null;       // null = just an OK button at the end
+    let choices = null;
     let choiceButtons = [];
     let isOpen = false;
     let typing = false;
@@ -115,9 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function playBlip() {
         if (blip === null) return;
-        // stop the previous blip and start a new one, like the game does
         if (lastBlip !== null) {
-            try { lastBlip.stop(); } catch (error) { /* already finished */ }
+            try { lastBlip.stop(); } catch (error) { }
         }
         lastBlip = playSound(blip, TEXT_VOLUME);
     }
@@ -127,9 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hiddenPart.textContent = line.substring(count);
     }
 
-    // Split one message into pages that fit inside the text area.
-    // Adds words one at a time; when the text would overflow the box,
-    // that's the end of the page and a new page starts.
     function splitIntoPages(message) {
         const words = message.split(" ");
         const result = [];
@@ -139,8 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (current !== "") attempt = current + " " + words[i];
             showLetters(attempt, attempt.length);
             if (text.scrollHeight > text.clientHeight + 1 && current !== "") {
-                result.push(current);       // full: this page is done
-                current = words[i];         // the word that didn't fit starts the next page
+                result.push(current);
+                current = words[i];
             } else {
                 current = attempt;
             }
@@ -149,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return result;
     }
 
-    // Bottom of the box: OK while reading, the choices on the last page
     function showButtons() {
         actions.innerHTML = "";
         actions.classList.remove("choices");
@@ -161,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
             choices.forEach(function (choice) {
                 const button = makeButton(choice.label, "ut-choice");
                 button.addEventListener("click", function (event) {
-                    event.stopPropagation();       // don't also count as "click the box"
+                    event.stopPropagation();
                     choice.action();
                 });
                 actions.appendChild(button);
@@ -197,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, TYPE_SPEED);
     }
 
-    // Start (or restart) the box with new lines
     function say(lines, newChoices) {
         clearInterval(timer);
         choices = newChoices;
@@ -213,13 +180,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isOpen) return;
         isOpen = true;
         openedBy = trigger;
-        unlockAudio();                    // this tap also lets the blips play
+        unlockAudio();
         if (showFace) {
             face.classList.remove("none");
         } else {
             face.classList.add("none");
         }
-        shade.classList.add("show");      // must be visible before measuring
+        shade.classList.add("show");
         say(lines, newChoices);
     }
 
@@ -231,14 +198,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (openedBy !== null) openedBy.focus();
     }
 
-    // OK / click / Z / Enter: finish the line, go to the next page, or close
     function advance() {
         if (!isOpen) return;
         if (typing) {
             finishTyping();
             return;
         }
-        if (choiceButtons.length > 0) return;   // waiting for a choice
+        if (choiceButtons.length > 0) return;
         page++;
         if (page < pages.length) {
             typePage();
@@ -247,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    box.addEventListener("click", advance);   // the OK button is inside the box
+    box.addEventListener("click", advance);
 
     document.addEventListener("keydown", function (event) {
         if (!isOpen) return;
@@ -256,7 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Left / Right moves the heart between choices
         const index = choiceButtons.indexOf(document.activeElement);
         if (choiceButtons.length > 0 && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
             event.preventDefault();
@@ -268,19 +233,17 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Enter on a focused button already "clicks" it, so skip it here
         if (event.key === "Enter" && document.activeElement.tagName === "BUTTON") return;
         if (event.key === "z" || event.key === "Z" || event.key === "Enter") {
             event.preventDefault();
             if (index >= 0) {
-                choiceButtons[index].click();   // Z picks the highlighted choice
+                choiceButtons[index].click();
             } else {
                 advance();
             }
         }
     });
 
-    // ---- 1. Undertale Sepia ----
     const sepiaTriggers = document.querySelectorAll(".sepia-box, #ch5_trailer img, .sepia-trigger");
     sepiaTriggers.forEach(function (trigger) {
         makeClickable(trigger, function () {
@@ -288,7 +251,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ---- 2. Save point ----
     const savePoint = document.getElementById("save-point");
     if (savePoint !== null) {
         const saveChoices = [
@@ -317,7 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // "Copy": put the email on the clipboard, play the save sound
     function copyEmail() {
         function done() {
             if (saveSound !== null) playSound(saveSound, SAVE_VOLUME);
@@ -333,7 +294,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // click, or Enter when focused with Tab
     function makeClickable(element, open) {
         if (element.tagName !== "BUTTON") {
             element.setAttribute("role", "button");

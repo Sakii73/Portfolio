@@ -1,41 +1,18 @@
-/* =====================================================================
-   fountain.js — Kris makes the Dark Fountain, then we go to the Dark World
-   ---------------------------------------------------------------------
-   This is a JavaScript port of the GameMaker object you sent
-   (Kris making the fountain + obj_fountainball + obj_animation +
-   obj_afterimage). Variable names are kept the same as the GML
-   (con, alarm[4], ballcon, xballtimer...) so you can compare them
-   side by side.
-
-   How it runs, GameMaker-style:
-     - ROOM_SPEED steps per second (Deltarune runs at 30).
-     - Every step: Alarm -> Step -> built-in motion -> Draw.
-     - Everything is drawn on a small canvas (VIEW_H game pixels tall)
-       that CSS stretches to fill the screen with sharp pixels.
-   ===================================================================== */
-
-
-// ===== SETTINGS you can change =====
 const DARK_WORLD_URL = "../darkworld/";
-const ROOM_SPEED = 30;          // game steps per second. 45 = play 1.5x faster
-const VIEW_H = 240;             // game view height in pixels (Light World view is 320x240)
-const KRIS_Y = 140;             // where Kris stands (top-left of the 40x65 sprite)
-const LAND_Y = KRIS_Y + 20;     // GML lands at y >= 120 (20px below where Kris stood)
-const FOUNTAIN_STEPS = 165;     // how long the fountain plays before the darkness comes down
-const COVER_ACCEL = 0.15;       // how fast the darkness speeds up while covering the page
-const SOUND_VOLUME = 0.6;       // 0 = muted, 1 = full
+const ROOM_SPEED = 30;
+const VIEW_H = 240;
+const KRIS_Y = 140;
+const LAND_Y = KRIS_Y + 20;
+const FOUNTAIN_STEPS = 165;
+const COVER_ACCEL = 0.15;
+const SOUND_VOLUME = 0.6;
 
 const ASSETS = "assets/";
 
-
-// ===== GML helpers =====
-
-// random(n): a random number from 0 to n (works with negative n too)
 function random(n) {
     return Math.random() * n;
 }
 
-// merge_color(c_white, c_black, amount) -> a CSS gray
 function mergeWhiteBlack(amount) {
     if (amount < 0) amount = 0;
     if (amount > 1) amount = 1;
@@ -43,9 +20,6 @@ function mergeWhiteBlack(amount) {
     return "rgb(" + v + "," + v + "," + v + ")";
 }
 
-
-// ===== Sprites: one PNG strip per GameMaker sprite =====
-// xorigin/yorigin = the sprite origin you'd set in GameMaker.
 function makeSprite(file, frameW, frameH, frames, xorigin, yorigin) {
     const img = new Image();
     img.src = ASSETS + "fountain/" + file;
@@ -59,8 +33,6 @@ const spr_kris_make_fountain_flash = makeSprite("spr_kris_make_fountain_flash.pn
 const spr_kris_shine = makeSprite("spr_kris_shine.png", 9, 9, 5, 4, 4);
 const spr_kris_fountain_ball = makeSprite("spr_kris_fountain_ball.png", 49, 49, 1, 24.5, 24.5);
 
-// image_blend = c_black: canvas can't tint images, so we make a
-// black copy of the (white) ball once it has loaded.
 let ballBlackCanvas = null;
 spr_kris_fountain_ball.img.addEventListener("load", function () {
     const c = document.createElement("canvas");
@@ -74,21 +46,13 @@ spr_kris_fountain_ball.img.addEventListener("load", function () {
     ballBlackCanvas = c;
 });
 
-
-// ===== Sounds (Web Audio API) =====
-// Each sound file is loaded ONCE into memory, then plays instantly as
-// many times as needed. (Phones lag or drop sounds if you make a new
-// <audio> element for every play — snd_fountain_target plays 20 times
-// in under a second.)  .wav / .mp3 so every phone can play them.
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContextClass();
 
-// iPhones: keep playing even when the silent switch is on
 if (navigator.audioSession) {
     navigator.audioSession.type = "playback";
 }
 
-// These hold the loaded sounds (null until loaded), like GameMaker sound assets
 let snd_fountain_target = null;
 let snd_fountain_make = null;
 let snd_deep_noise = null;
@@ -100,7 +64,7 @@ function loadSound(file) {
         })
         .then(function (data) {
             return new Promise(function (resolve, reject) {
-                audioCtx.decodeAudioData(data, resolve, reject);   // callback style = old iPhones too
+                audioCtx.decodeAudioData(data, resolve, reject);
             });
         });
 }
@@ -109,9 +73,8 @@ loadSound("snd_fountain_target.wav").then(function (b) { snd_fountain_target = b
 loadSound("snd_fountain_make.mp3").then(function (b) { snd_fountain_make = b; });
 loadSound("snd_deep_noise.wav").then(function (b) { snd_deep_noise = b; });
 
-// snd_play(sound) — like GameMaker's: plays once, can overlap itself
 function snd_play(sound, loop) {
-    if (sound === null) return;          // not loaded (yet): skip it
+    if (sound === null) return;
     const source = audioCtx.createBufferSource();
     source.buffer = sound;
     source.loop = loop === true;
@@ -122,22 +85,16 @@ function snd_play(sound, loop) {
     source.start();
 }
 
-// Phones block sound until a tap: call this inside the button tap
 function unlockAudio() {
     audioCtx.resume();
-    // older iPhones also need a tiny silent sound played during the tap
     const silent = audioCtx.createBufferSource();
     silent.buffer = audioCtx.createBuffer(1, 1, 22050);
     silent.connect(audioCtx.destination);
     silent.start();
 }
 
-
-// ===== The canvas (our "room") =====
 let canvas, ctx, VIEW_W;
 
-// draw_sprite_ext(sprite, subimg, x, y, xscale, yscale, 0, blend, alpha)
-// blend: "white" (normal) or "black" (only used for the balls)
 function draw_sprite_ext(spr, subimg, x, y, xscale, yscale, blend, alpha) {
     if (alpha <= 0) return;
     if (alpha > 1) alpha = 1;
@@ -150,14 +107,13 @@ function draw_sprite_ext(spr, subimg, x, y, xscale, yscale, blend, alpha) {
     ctx.globalAlpha = alpha;
     ctx.drawImage(
         source,
-        frame * spr.w, 0, spr.w, spr.h,                 // which frame in the strip
-        x - spr.xo * xscale, y - spr.yo * yscale,       // where (origin-adjusted)
-        spr.w * xscale, spr.h * yscale                  // how big
+        frame * spr.w, 0, spr.w, spr.h,
+        x - spr.xo * xscale, y - spr.yo * yscale,
+        spr.w * xscale, spr.h * yscale
     );
     ctx.globalAlpha = 1;
 }
 
-// draw_ellipse(x1, y1, x2, y2, false) — filled
 function draw_ellipse(x1, y1, x2, y2, color) {
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -165,14 +121,11 @@ function draw_ellipse(x1, y1, x2, y2, color) {
     ctx.fill();
 }
 
+let kris;
+let balls = [];
+let animations = [];
+let afterimages = [];
 
-// ===== Instances (like GameMaker instances, kept in arrays) =====
-let kris;              // the fountain-making Kris object
-let balls = [];        // obj_fountainball (front black + back white)
-let animations = [];   // obj_animation  (shine, flashes)
-let afterimages = [];  // obj_afterimage (the stretched flash rings)
-
-// GameMaker's built-in movement: friction, then gravity, then move.
 function applyMotion(inst) {
     if (inst.friction > 0) {
         const speed = Math.hypot(inst.hspeed, inst.vspeed);
@@ -183,7 +136,7 @@ function applyMotion(inst) {
         }
     }
     if (inst.gravity !== 0) {
-        const dir = inst.gravity_direction * Math.PI / 180;   // GM: 90 = up
+        const dir = inst.gravity_direction * Math.PI / 180;
         inst.hspeed += inst.gravity * Math.cos(dir);
         inst.vspeed -= inst.gravity * Math.sin(dir);
     }
@@ -191,12 +144,10 @@ function applyMotion(inst) {
     inst.y += inst.vspeed;
 }
 
-// obj_animation: plays once, then instance_destroy() on Animation End
 function createAnimation(sprite, x, y, imageSpeed) {
     animations.push({ sprite: sprite, x: x, y: y, image_index: 0, image_speed: imageSpeed });
 }
 
-// obj_fountainball — Create event
 function createFountainBall(x, y) {
     const ball = {
         x: x,
@@ -220,7 +171,6 @@ function createFountainBall(x, y) {
     return ball;
 }
 
-// obj_fountainball — Draw event
 function fountainBallDraw(ball) {
     if (ball.init === 0 && ball.back === 0) {
         const backball = createFountainBall(ball.x, ball.y);
@@ -248,10 +198,9 @@ function fountainBallDraw(ball) {
     }
 }
 
-// Kris — Create event
 function createKris() {
     return {
-        x: Math.round(VIEW_W / 2) - 18,   // so cenx (x + 18) is the middle of the screen
+        x: Math.round(VIEW_W / 2) - 18,
         y: KRIS_Y,
         sprite: spr_kris_make_fountain,
         image_index: 0,
@@ -261,7 +210,7 @@ function createKris() {
         gravity: 0,
         gravity_direction: 270,
         friction: 0,
-        depth: 20,          // behind the balls until the jump (GML sets depth = 8 then)
+        depth: 20,
         alarm4: -1,
 
         con: 50,
@@ -279,14 +228,13 @@ function createKris() {
         cenx: 0,
         ceny: 0,
         whitecolor: "#fff",
-        fountainStartedAt: -1,  // (website only) step when ballcon 3 began
-        covering: false,        // (website only) true = darkness is covering the page
+        fountainStartedAt: -1,
+        covering: false,
         coverSpeed: 0,
         coveredSteps: 0
     };
 }
 
-// Kris — Step event
 function krisStep() {
     const k = kris;
     if (k.active !== 1) return;
@@ -359,7 +307,6 @@ function krisStep() {
         k.con = 67;
     }
     if (k.con === 67) {
-        // collision_rectangle(bbox...) with obj_fountainball: kick the ball
         const ballcheck = findBallTouchingKris();
         if (ballcheck !== null && ballcheck.back === 0) {
             ballcheck.hspeed += (-4 + random(8));
@@ -381,7 +328,6 @@ function krisStep() {
     }
 }
 
-// Kris's bounding box (the jump sprite's visible area) vs each ball's box
 function findBallTouchingKris() {
     const left = kris.x + 7, top = kris.y + 14, right = kris.x + 34, bottom = kris.y + 56;
     for (let i = 0; i < balls.length; i++) {
@@ -394,7 +340,6 @@ function findBallTouchingKris() {
     return null;
 }
 
-// Kris — Draw event (this is where the beam, balls and ceiling happen)
 function krisDraw() {
     const k = kris;
     if (k.active !== 1) return;
@@ -403,7 +348,6 @@ function krisDraw() {
         draw_sprite_ext(k.sprite, k.image_index, k.x, k.y, 1, 1, "white", 1);
     }
 
-    // --- 1: a thin white line shoots out sideways from Kris's feet ---
     if (k.ballcon === 1) {
         k.xballtimer += (k.xballtimer + 1);
         k.yballtimer++;
@@ -421,7 +365,6 @@ function krisDraw() {
         }
     }
 
-    // --- 2: the pulsing beam (3s white, then it inverts to black) ---
     if (k.ballcon === 2) {
         k.balltimer++;
         if (k.balltimer > 90) k.inverttimer++;
@@ -436,7 +379,7 @@ function krisDraw() {
         if (k.releasetimer <= 0) {
             if (k.xballtimer <= 20) k.xballtimer = 20;
             if (k.xballtimer < (k.yballtimer / 6)) k.xballtimer = k.yballtimer / 6;
-            if (k.yballtimer >= 98) k.yballtimer = 99 + random(5);   // the random height = the pulse
+            if (k.yballtimer >= 98) k.yballtimer = 99 + random(5);
             k.yballtimer *= 3;
         } else {
             k.yballtimer *= 3;
@@ -445,7 +388,7 @@ function krisDraw() {
             if (k.releasetimer >= 10) {
                 k.ballcon = 3;
                 k.fountainStartedAt = stepCount;
-                snd_play(snd_deep_noise, true);     // loops (audio_play_sound(..., true))
+                snd_play(snd_deep_noise, true);
             }
         }
 
@@ -468,14 +411,13 @@ function krisDraw() {
                     x: k.cenx - 4,
                     y: k.ceny + 4,
                     image_xscale: 4,
-                    image_yscale: 1,      // the GML sets "image_yxscale" (typo), so yscale stays 1
+                    image_yscale: 1,
                     image_alpha: 0.8,
                     fadeSpeed: 0.04
                 });
             }
         }
 
-        // with (obj_afterimage)
         for (let i = 0; i < afterimages.length; i++) {
             const a = afterimages[i];
             a.image_xscale *= (1.15 + random(0.02));
@@ -485,14 +427,11 @@ function krisDraw() {
         }
     }
 
-    // --- 3: the fountain pours out and darkness gathers at the ceiling ---
     if (k.ballcon === 3) {
         createFountainBall(k.cenx, k.ceny);
         k.ceiltimer++;
 
         if (k.covering) {
-            // (website only) the darkness comes down faster and faster
-            // until it has swallowed the whole page
             k.coverSpeed += COVER_ACCEL;
             k.ceilheight += k.coverSpeed;
         } else {
@@ -500,7 +439,6 @@ function krisDraw() {
             if (k.ceilheight >= 120) k.ceilheight += 0.5;
         }
 
-        // GML uses 12 balls across a 320px view; this fills any screen width
         const count = Math.ceil((VIEW_W + 80) / 40);
         const span = count * 40;
         const ceilballx = [];
@@ -517,15 +455,12 @@ function krisDraw() {
     }
 }
 
-
-// ===== One game step: Alarm -> Step -> motion -> Draw =====
 let stepCount = 0;
 let finished = false;
 
 function gameStep() {
     stepCount++;
 
-    // Alarm[4]: counts down; when it hits 0, con++ (like the GML alarm event)
     if (kris.alarm4 > 0) {
         kris.alarm4--;
         if (kris.alarm4 === 0) {
@@ -534,21 +469,18 @@ function gameStep() {
         }
     }
 
-    // Step events
     krisStep();
     for (let i = 0; i < afterimages.length; i++) {
         afterimages[i].image_alpha -= afterimages[i].fadeSpeed;
     }
     afterimages = afterimages.filter(function (a) { return a.image_alpha >= 0; });
 
-    // Built-in motion + image animation
     applyMotion(kris);
     kris.image_index += kris.image_speed;
     for (let i = 0; i < balls.length; i++) applyMotion(balls[i]);
     for (let i = 0; i < animations.length; i++) animations[i].image_index += animations[i].image_speed;
-    animations = animations.filter(function (a) { return a.image_index < a.sprite.frames; });   // Animation End
+    animations = animations.filter(function (a) { return a.image_index < a.sprite.frames; });
 
-    // Draw events, back to front (higher depth first, like GameMaker)
     ctx.clearRect(0, 0, VIEW_W, VIEW_H);
     const drawList = [];
     drawList.push({ depth: kris.depth, draw: krisDraw });
@@ -566,21 +498,15 @@ function gameStep() {
         draw_sprite_ext(a.sprite, a.image_index, a.x, a.y, 1, 1, "white", 1);
     });
 
-    // (website only) after the fountain has played a while, the darkness
-    // comes down until the whole page is black, then we go to the Dark World
     if (kris.fountainStartedAt > 0 && stepCount - kris.fountainStartedAt > FOUNTAIN_STEPS) {
         kris.covering = true;
     }
-    // the ceiling balls hang from (ceilheight - 80); once even the tops of
-    // the puffs are below the screen, everything is black
     if (kris.covering && (kris.ceilheight - 80 - 30) > VIEW_H) {
         kris.coveredSteps++;
-        if (kris.coveredSteps >= 10) goToDarkWorld();   // hold the black for 1/3 second
+        if (kris.coveredSteps >= 10) goToDarkWorld();
     }
 }
 
-
-// ===== Running it =====
 let tint;
 let lastTime = 0;
 let leftover = 0;
@@ -590,8 +516,6 @@ function setTint(mode) {
     tint.classList.add(mode);
 }
 
-// requestAnimationFrame runs ~60 times a second; we only do a game
-// step every 1/ROOM_SPEED seconds, so the speed matches the game.
 function loop(time) {
     if (finished) return;
     if (lastTime === 0) lastTime = time;
@@ -615,13 +539,11 @@ function goToDarkWorld() {
 }
 
 function startFountainCutscene() {
-    // People who turned off animations in their OS: just go.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         goToDarkWorld();
         return;
     }
 
-    // Size the room: VIEW_H tall, as wide as the screen's shape allows
     VIEW_W = Math.round(VIEW_H * window.innerWidth / window.innerHeight);
     canvas.width = VIEW_W;
     canvas.height = VIEW_H;
@@ -638,8 +560,6 @@ function startFountainCutscene() {
     requestAnimationFrame(loop);
 }
 
-
-// ===== Setup =====
 document.addEventListener("DOMContentLoaded", function () {
     canvas = document.getElementById("fountain-canvas");
     tint = document.getElementById("fountain-tint");
@@ -648,14 +568,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("enter-dark-world");
     button.addEventListener("click", function () {
         button.disabled = true;
-        unlockAudio();              // this tap is what lets the cutscene's sounds play on phones
+        unlockAudio();
         startFountainCutscene();
     });
 
-    // Click anywhere during the cutscene to skip it
     canvas.addEventListener("click", goToDarkWorld);
 
-    // Coming back from the Dark World? Fade in from white.
     if (window.location.search.indexOf("from=dark") !== -1) {
         document.body.classList.add("from-dark");
     }

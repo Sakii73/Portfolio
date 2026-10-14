@@ -1,13 +1,3 @@
-/* =========================================================
-   soul.css — the red SOUL heart cursor (like Deltarune menus)
-   ---------------------------------------------------------
-   Hover or keyboard-focus a nav link or a menu option and the
-   heart appears on its left while the text turns yellow.
-   The heart is drawn with ::before so the text never moves.
-   (top/translate instead of margin: the site's reset clears
-   margin on ::before too)
-   ========================================================= */
-
 nav ul li a,
 .soul-option {
     position: relative !important;
@@ -35,7 +25,6 @@ nav ul li a:focus-visible::before,
     visibility: visible;
 }
 
-/* selected = yellow text, like the game */
 nav ul li a:hover,
 nav ul li a:focus-visible,
 .soul-option:hover,
@@ -45,7 +34,6 @@ nav ul li a:focus-visible,
     outline: none;
 }
 
-/* phones: smaller heart so it fits in the smaller gaps */
 @media (max-width: 600px) {
     nav ul li a::before,
     .soul-option::before {

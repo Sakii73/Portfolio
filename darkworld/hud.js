@@ -1,20 +1,12 @@
-/* =========================================================
-   hud.js — makes the battle-HUD parts move
-   1. Party panels: each LV bar fills up when it scrolls into view.
-      The level comes from data-lv="..." on the panel (0 to 10).
-   2. TP meter: fills as you scroll down; 100% shows MAX.
-   ========================================================= */
-
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ---- 1. LV bars ----
     const members = document.querySelectorAll(".party-member");
 
     function fillBar(member) {
         let level = Number(member.getAttribute("data-lv"));
         if (level > 10) level = 10;
         if (level < 0) level = 0;
-        member.querySelector(".pm-fill").style.width = (level * 10) + "%";   // LV 7 = 70% full
+        member.querySelector(".pm-fill").style.width = (level * 10) + "%";
     }
 
     if ("IntersectionObserver" in window) {
@@ -22,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
                     fillBar(entry.target);
-                    watcher.unobserve(entry.target);   // only once
+                    watcher.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.4 });
@@ -30,10 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
             watcher.observe(member);
         });
     } else {
-        members.forEach(fillBar);                  // old browsers: just fill them
+        members.forEach(fillBar);
     }
 
-    // ---- 2. TP meter ----
     const meter = document.getElementById("tp-meter");
     if (meter === null) return;
     const fill = meter.querySelector(".tp-fill");

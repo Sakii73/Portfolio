@@ -1,6 +1,3 @@
-/* Music on/off button (bottom-left). Same look as the
-   "Return to the Light World" button; !important for the same
-   reason (the site's CSS resets every button). */
 .music-toggle {
     position: fixed;
     left: 16px;
@@ -23,12 +20,10 @@
     border-color: #F9FF10 !important;
 }
 
-/* muted = dimmer, so you can tell at a glance */
 .music-toggle[aria-pressed="true"] {
     color: #7F7F7F !important;
 }
 
-/* phones: put the music button above the return button so they don't overlap */
 @media (max-width: 600px) {
     .music-toggle {
         bottom: 66px;
@@ -37,8 +32,6 @@
     }
 }
 
-/* "Tap anywhere to enter" screen — only shown when the browser
-   blocks sound (mostly phones). Covers everything until tapped. */
 .tap-gate {
     position: fixed;
     top: 0;

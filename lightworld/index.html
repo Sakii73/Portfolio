@@ -9,7 +9,6 @@
 </head>
 <body>
 
-    <!-- NAVIGATION -->
     <header class="site-header">
         <div class="container header-inner">
             <a class="logo" href="#top">Justin Era Antonio</a>
@@ -25,7 +24,6 @@
 
     <main id="top">
 
-        <!-- HERO -->
         <section class="hero">
             <div class="container hero-inner">
                 <img class="avatar" src="assets/portrait.png" alt="Portrait of Justin Era Antonio">
@@ -35,14 +33,12 @@
                     <p class="lead">A web developer who likes building interactive, polished experiences.</p>
                     <div class="hero-buttons">
                         <a class="btn btn-primary" href="#projects">View my work</a>
-                        <!-- This button starts the fountain cutscene (fountain.js) -->
                         <button id="enter-dark-world" class="btn btn-secondary" type="button">Enter the Dark World</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ABOUT -->
         <section id="about" class="section">
             <div class="container">
                 <h2>About Me</h2>
@@ -52,7 +48,6 @@
             </div>
         </section>
 
-        <!-- SKILLS -->
         <section id="skills" class="section section-alt">
             <div class="container">
                 <h2>Skills</h2>
@@ -65,7 +60,6 @@
             </div>
         </section>
 
-        <!-- LANGUAGES -->
         <section id="languages" class="section">
             <div class="container">
                 <h2>Languages</h2>
@@ -97,7 +91,6 @@
             </div>
         </section>
 
-        <!-- PROJECTS -->
         <section id="projects" class="section section-alt">
             <div class="container">
                 <h2>Projects</h2>
@@ -132,7 +125,6 @@
             </div>
         </section>
 
-        <!-- TOOLS -->
         <section id="tools" class="section">
             <div class="container">
                 <h2>Tools</h2>
@@ -150,16 +142,27 @@
             </div>
         </section>
 
-        <!-- EDUCATION -->
         <section id="education" class="section section-alt">
             <div class="container">
                 <h2>Education</h2>
-                <p class="edu-degree">BS Information Technology</p>
-                <p class="edu-school">Bulacan State University</p>
+                <div class="edu-item">
+                    <p class="edu-degree">BS Information Technology</p>
+                    <p class="edu-school">Bulacan State University</p>
+                    <p class="edu-years">2023 &ndash; Present &middot; 3rd Year</p>
+                </div>
+                <div class="edu-item">
+                    <p class="edu-degree">High School (Junior &amp; Senior High)</p>
+                    <p class="edu-school">Meycauayan College</p>
+                    <p class="edu-years">2017 &ndash; 2023</p>
+                </div>
+                <div class="edu-item">
+                    <p class="edu-degree">Elementary</p>
+                    <p class="edu-school">Meycauayan College</p>
+                    <p class="edu-years">2011 &ndash; 2017</p>
+                </div>
             </div>
         </section>
 
-        <!-- CONTACT -->
         <section id="contact" class="section">
             <div class="container">
                 <h2>Contact</h2>
@@ -175,8 +178,6 @@
         </div>
     </footer>
 
-    <!-- FOUNTAIN CUTSCENE (hidden until the button is pressed) -->
-    <!-- tint = darkens the page like night; canvas = where Kris and the fountain are drawn -->
     <div id="fountain-tint" class="fountain-tint" aria-hidden="true"></div>
     <canvas id="fountain-canvas" class="fountain-canvas" aria-hidden="true"></canvas>
 

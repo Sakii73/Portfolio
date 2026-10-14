@@ -1,20 +1,8 @@
-/* =========================================================
-   music.js — Dark World music (loops forever) + mute button
-   ---------------------------------------------------------
-   Uses the shared sound card from audio.js (load it first).
-
-   Phones won't play sound until you tap THIS page (a tap on
-   the Light World page doesn't count). So if the sound is
-   blocked when you arrive, a "Tap anywhere to enter" screen
-   shows first; your tap starts the music and replays the
-   page's intro from the beginning.
-   ========================================================= */
-
 const MUSIC_OGG = "assets/music/dark-world-loop.ogg";
-const MUSIC_MP3 = "assets/music/dark-world-loop.mp3";   // copy for iPhones (no .ogg support)
-const MUSIC_LENGTH = 168.959854;                       // exact length of the loop, in seconds
-const MUSIC_VOLUME = 0.5;                              // 0 to 1
-const MUTE_KEY = "darkworld-music-muted";              // remembers your mute choice
+const MUSIC_MP3 = "assets/music/dark-world-loop.mp3";
+const MUSIC_LENGTH = 168.959854;
+const MUSIC_VOLUME = 0.5;
+const MUTE_KEY = "darkworld-music-muted";
 
 let muted = false;
 
@@ -25,12 +13,8 @@ function startMusic() {
     return loadSound(file).then(function (buffer) {
         const source = audioCtx.createBufferSource();
         source.buffer = buffer;
-        source.loop = true;            // repeat forever
+        source.loop = true;
 
-        // The .ogg loops perfectly as it is. MP3 files get a tiny bit of
-        // silence added at the start and end, so for the .mp3 copy, find
-        // where the music really starts and loop exactly MUSIC_LENGTH
-        // seconds from there (no gap).
         let start = 0;
         if (file === MUSIC_MP3) {
             start = findMusicStart(buffer);
@@ -43,11 +27,9 @@ function startMusic() {
     });
 }
 
-// Seconds of silence before the first sound in the file.
-// (The song itself starts making sound 0.83ms in.)
 function findMusicStart(buffer) {
     const samples = buffer.getChannelData(0);
-    const limit = Math.min(samples.length, buffer.sampleRate);   // only look at the first second
+    const limit = Math.min(samples.length, buffer.sampleRate);
     for (let i = 0; i < limit; i++) {
         if (Math.abs(samples[i]) > 0.003) {
             return Math.max(0, i / buffer.sampleRate - 0.00083);
@@ -68,7 +50,6 @@ function saveMuted(value) {
     try {
         localStorage.setItem(MUTE_KEY, String(value));
     } catch (error) {
-        // can't save — ignore
     }
 }
 
@@ -81,7 +62,6 @@ function updateButton(button) {
     button.setAttribute("aria-pressed", String(muted));
 }
 
-// Smoothly turn the music volume knob (avoids a "click" sound)
 function setMusicVolume(value, seconds) {
     const now = audioCtx.currentTime;
     musicGain.gain.cancelScheduledValues(now);
@@ -89,7 +69,6 @@ function setMusicVolume(value, seconds) {
     musicGain.gain.linearRampToValueAtTime(value, now + seconds);
 }
 
-// Black "tap to enter" screen, only shown when sound is blocked
 function showTapToEnter() {
     const gate = document.createElement("div");
     gate.className = "tap-gate";
@@ -100,12 +79,11 @@ function showTapToEnter() {
     document.body.appendChild(gate);
 
     function enter() {
-        unlockAudio();                             // starts the music
+        unlockAudio();
         gate.removeEventListener("click", enter);
         document.removeEventListener("keydown", enter);
-        gate.classList.add("hide");                // fade the black screen away
+        gate.classList.add("hide");
 
-        // replay the page's intro (name pop-in, fade-ins) from the start
         if (document.getAnimations) {
             document.getAnimations().forEach(function (animation) {
                 if (animation.effect && animation.effect.target !== gate) {
@@ -137,13 +115,11 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Dark World music could not load:", error);
     });
 
-    // Give the browser a moment; if sound is still blocked, ask for a tap
     setTimeout(function () {
         if (audioIsBlocked()) showTapToEnter();
     }, 250);
 
     button.addEventListener("click", function () {
-        // If sound was still blocked, this tap just starts it
         if (audioIsBlocked()) {
             unlockAudio();
             return;
@@ -158,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
         updateButton(button);
     });
 
-    // Going back to the Light World: fade the music out with the white light
     const returnButton = document.getElementById("return-to-light");
     if (returnButton !== null) {
         returnButton.addEventListener("click", function () {

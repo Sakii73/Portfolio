@@ -1,9 +1,3 @@
-/* =========================================================
-   "Return to the Light World" button + white flash
-   !important is needed because this site's main CSS resets
-   padding, borders, colors and fonts on every element with
-   a very high-priority selector trick.
-   ========================================================= */
 .world-return {
     position: fixed;
     right: 16px;
@@ -23,12 +17,9 @@
 }
 
 .world-return:hover {
-    border-color: #F9FF10 !important;   /* Deltarune yellow, same as the site's hover */
+    border-color: #F9FF10 !important;
 }
 
-/* The light: drawn by return-to-light.js on a small canvas that
-   CSS stretches over the screen with sharp, chunky pixels
-   (same trick as the fountain cutscene). */
 .light-flash {
     position: fixed;
     top: 0;
@@ -42,7 +33,7 @@
 
 .light-flash.show {
     display: block;
-    pointer-events: auto;      /* block clicks while the light is on */
+    pointer-events: auto;
 }
 
 .light-flash canvas {
